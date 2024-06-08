@@ -151,8 +151,7 @@ main{
   position: fixed;
   border-radius: 50%;
   cursor: pointer;
-  transition: filter 0.15s ease;
-  transition: left 0.15s ease , top 0.15s ease;
+  transition: filter 0.15s ease ,left 0.15s ease , top 0.15s ease;
 }
 .player:hover{
   filter: brightness(95%);

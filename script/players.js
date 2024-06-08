@@ -42,25 +42,14 @@ function handlePlayersDefaultPosition(windowWidth){
 
   playerEl.style.left = centerPlayer(coordinatesObject[`left${playerNum}`]);
   playerEl.style.top = centerPlayer(coordinatesObject[`top${playerNum}`]);
-  if(windowWidth < 380){
-    console.log(`left ${coordinatesObject[`left${playerNum}`]}`);
-    console.log(`top ${coordinatesObject[`top${playerNum}`]}`);
-  }
   });
 
-  // function convertToPercentage(containerValue,convertValue){
-  //   return ((convertValue / containerValue) * 100);
-  // };
+
 
   function centerPlayer(elementValue){
-  const boxWidth = document.querySelector('.box').getBoundingClientRect().width;
-  const playerWidth = document.querySelector('.player').getBoundingClientRect().width;
-  if(windowWidth < 380){
-    console.log(`container ${boxWidth}`);
-    console.log(`self ${playerWidth}`);
-    console.log(`move value ${elementValue + ((boxWidth /2) - (playerWidth / 2))}`)
-  }
-  return `${elementValue + ((boxWidth /2) - (playerWidth / 2))}px`
+    const boxWidth = document.querySelector('.box').getBoundingClientRect().width;
+    const playerWidth = document.querySelector('.player').getBoundingClientRect().width;
+    return `${elementValue + ((boxWidth /2) - (playerWidth / 2))}px`
   }
 };
 

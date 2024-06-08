@@ -13,20 +13,53 @@ html{
   --blue-color:#4895ef;
   --red-color:#d90429;
   --border:0.7px solid black;
-  --width-ludo:60rem;
+  --width-ludo:52rem;
 }
 body{
   font-family: "Roboto", sans-serif;
   font-size: 1.6rem;
 }
+/* header  */
+header{
+  width:100%;
+  height: 5rem;
+  background-color: white;
+  box-shadow: 0rem 0.5rem 2rem rgba(#003566,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0rem 2rem;
+}
+.site-name{
+  font-size:2.2rem;
+  color: #003566;
+  cursor: pointer;
+  text-decoration: none;
+}
+ul{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap:1rem;
+}
+li{
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+li{
+  font-size: 1.6rem;
+  width: 4rem;
+  aspect-ratio: 1;
+}
 main{
-  min-height: 100vh;
-  min-height: 100svh;
+  min-height:calc(100vh - 5rem);
+  min-height:calc(100svh - 5rem);
   background-color:var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1.5rem;
 }
 .ludo-container{
   width:var(--width-ludo);
@@ -128,6 +161,7 @@ main{
   color: white;
   text-shadow: 0px 0px 5px rgba(0,0,0,0.3);
   cursor: default;
+  font-size: 1.5rem;
 }
 /**/
 .home-text:nth-child(1){
@@ -202,6 +236,18 @@ main{
   }
   .box.star svg{
     transform: scale(1.2);
+  }
+}
+@media (max-width:420px){
+  header{
+    padding: 0rem 0.5rem;
+  }
+  .site-name{
+    font-size: 1.8rem;
+  }
+  li{
+    width: 3.7rem;
+    aspect-ratio: 1;
   }
 }
 @media (max-width:380px){

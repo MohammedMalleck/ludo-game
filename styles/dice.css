@@ -1,6 +1,6 @@
 :root{
-  --dice-width:5rem;
-  --dot-width:1.1rem;
+  --dice-width:4rem;
+  --dot-width:0.9rem;
   --value: calc((((var(--dice-width) - var(--dot-width)) / 2) - .5rem) * -1);
   --gap:calc(var(--dice-width) - (var(--dot-width) + 1rem));
   --gap-two:calc(var(--gap) / 2);
@@ -18,7 +18,7 @@
   box-shadow: 0rem 0rem 0.5rem rgba(255,255,255,0.5);
 }
 .dice-container.red{
-  top: 85%;
+  top: 84%;
   left: 105%;
 }
 .dice-container.yellow{
@@ -26,7 +26,7 @@
   right: 105%;
 }
 .dice-container.blue{
-  top: 85%;
+  top: 84%;
   right: 105%;
 }
 .dice-container.green{

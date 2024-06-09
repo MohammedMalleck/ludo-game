@@ -13,7 +13,7 @@ const coordinatesArray = [
   }
 ];
 
-function handlePlayersDefaultPosition(windowWidth){
+function handlePlayersDefaultPosition(){
   //set the co-ordinates of each jail container
   //use its class to find matching obeject,
   //and use its jailNum attr to determine its left top number(ie:left1,top1...);
@@ -46,16 +46,16 @@ function handlePlayersDefaultPosition(windowWidth){
 
 
 
-  function centerPlayer(elementValue){
-    const boxWidth = document.querySelector('.box').getBoundingClientRect().width;
+  function centerPlayer(positionValue){
+    const playerContainerWidth = document.querySelector('.player-container').getBoundingClientRect().width;
     const playerWidth = document.querySelector('.player').getBoundingClientRect().width;
-    return `${elementValue + ((boxWidth /2) - (playerWidth / 2))}px`
+    return `${(positionValue + ((playerContainerWidth  /2) - (playerWidth / 2)))}px`
   }
 };
 
 window.addEventListener('DOMContentLoaded',()=>{
-  handlePlayersDefaultPosition(window.innerWidth);
+  handlePlayersDefaultPosition();
   window.addEventListener('resize',()=>{
-    handlePlayersDefaultPosition(window.innerWidth);
+    handlePlayersDefaultPosition();
   });
 });

@@ -208,6 +208,76 @@ main{
   height: 100%;
 }
 
+/* dice styles  */
+
+.roll-container{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: white;
+  --number-size:2rem;
+}
+.roll-container::after{
+  z-index: 2;
+  position: absolute;
+  content: '';
+  width:100%;
+  height:calc(var(--number-size) + 1rem);
+  top: 0;
+  /*this doesnt work
+  background-image: url('images/confetti.gif');
+  */
+  /*but this does*/
+  background-image: url('https://www.icegif.com/wp-content/uploads/2023/12/icegif-214.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.roll-container.yellow{
+  right: 110%;
+}
+.roll-container.green{
+  left: 110%;
+}
+.roll-container.blue{
+  bottom: 29%;
+  right: 110%;
+}
+.roll-container.red{
+  bottom: 29%;
+  left: 110%;
+}
+.numbers{
+  font-size: var(--number-size);
+}
+.roll-btn{
+  border: none;
+  background-color: white;
+  width: 5rem;
+  padding:0.3rem 0rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+  box-shadow: 0rem 0rem 1rem rgba(0,0,0,0.5);
+}
+.roll-btn:hover{
+  filter: brightness(97%);
+}
+.roll-container.yellow .roll-btn{
+  border: 0.15rem solid var(--yellow-color);
+}
+.roll-container.green .roll-btn{
+  border: 0.15rem solid var(--green-color);
+}
+.roll-container.blue .roll-btn{
+  border: 0.15rem solid var(--blue-color);
+}
+.roll-container.red .roll-btn{
+  border: 0.15rem solid var(--red-color);
+}
+
 /*media queries*/
 @media(max-width:855px){
   :root{

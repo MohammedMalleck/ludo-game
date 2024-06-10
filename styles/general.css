@@ -237,7 +237,7 @@ main{
   position: absolute;
   top: -.5rem;
   content: '';
-  font-size: 3rem;
+  font-size: calc(var(--number-size) + 1rem);
 }
 .roll-container.point.green::before,
 .roll-container.point.red::before{
@@ -311,7 +311,7 @@ main{
     transform: scale(2);
   }
 }
-@media(max-width:685px){
+@media(max-width:785px){
   :root{
     --width-ludo:35rem;
     --player-container-width:2.3rem;
@@ -337,7 +337,7 @@ main{
     font-size: 1.2rem;
   }
 }
-@media (max-width:530px){
+@media (max-width:590px){
   :root{
     --width-ludo:27rem;
     --player-container-width:1.8rem;
@@ -364,19 +364,7 @@ main{
     border-width: 0.1rem;
   }
 }
-@media (max-width:420px){
-  header{
-    padding: 0rem 1rem;
-  }
-  .site-name{
-    font-size: 1.8rem;
-  }
-  li{
-    width: 3.7rem;
-    aspect-ratio: 1;
-  }
-}
-@media (max-width:415px){
+@media (max-width:480px){
   :root{
     --width-ludo:22rem;
     --player-container-width:1.4rem;
@@ -402,7 +390,34 @@ main{
     border-width: 0.08rem;
   }
 }
-
+@media (max-width:420px){
+  header{
+    padding: 0rem 1rem;
+  }
+  .site-name{
+    font-size: 1.8rem;
+  }
+  li{
+    width: 3.7rem;
+    aspect-ratio: 1;
+  }
+}
+@media (max-width:390px){
+  .roll-container::before{
+    font-size: 1.3rem;
+    top: -.25rem;
+  }
+}
+@media (max-width:360px){
+  .roll-container::before{
+    font-size: 1rem;
+  }
+}
+@media (max-width:350px){
+  .roll-container::before{
+    font-size: .8rem;
+  }
+}
 /* animations  */
 @keyframes pointAnimationLeft{
   50%{

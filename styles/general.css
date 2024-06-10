@@ -192,7 +192,7 @@ main{
 /*players*/
 
 .player{
-  position:fixed;
+  position:absolute;
   width:var(--player-width);
   height: var(--player-width);
   border-radius: 50%;
@@ -227,7 +227,7 @@ main{
   width:100%;
   height:calc(var(--number-size) + 1rem);
   top: 0;
-  background-image: url(../images/confetti.gif);
+  /* background-image: url(../images/confetti.gif); */
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -257,21 +257,23 @@ main{
   cursor: pointer;
   transition: filter 0.15s ease;
   box-shadow: 0rem 0rem 1rem rgba(0,0,0,0.5);
+  border-width:0.15rem;
+  border-style: solid;
 }
 .roll-btn:hover{
   filter: brightness(97%);
 }
 .roll-container.yellow .roll-btn{
-  border: 0.15rem solid var(--yellow-color);
+  border-color:  var(--yellow-color);
 }
 .roll-container.green .roll-btn{
-  border: 0.15rem solid var(--green-color);
+  border-color:  var(--green-color);
 }
 .roll-container.blue .roll-btn{
-  border: 0.15rem solid var(--blue-color);
+  border-color:  var(--blue-color);
 }
 .roll-container.red .roll-btn{
-  border: 0.15rem solid var(--red-color);
+  border-color:  var(--red-color);
 }
 
 /*media queries*/
@@ -290,7 +292,7 @@ main{
     transform: scale(2);
   }
 }
-@media(max-width:645px){
+@media(max-width:685px){
   :root{
     --width-ludo:35rem;
     --player-container-width:2.3rem;
@@ -307,8 +309,16 @@ main{
   .box.star svg{
     transform: scale(1.5);
   }
+  .roll-container{
+    --number-size:1.5rem;
+  }
+  .roll-btn{
+    width: 4rem;
+    padding: 0.3rem 0rem;
+    font-size: 1.2rem;
+  }
 }
-@media (max-width:490px){
+@media (max-width:530px){
   :root{
     --width-ludo:27rem;
     --player-container-width:1.8rem;
@@ -325,10 +335,19 @@ main{
   .box.star svg{
     transform: scale(1.2);
   }
+  .roll-container{
+    --number-size:1.3rem;
+  }
+  .roll-btn{
+    width: 3rem;
+    padding: 0.1rem 0rem;
+    font-size: 1rem;
+    border-width: 0.1rem;
+  }
 }
 @media (max-width:420px){
   header{
-    padding: 0rem 0.5rem;
+    padding: 0rem 1rem;
   }
   .site-name{
     font-size: 1.8rem;
@@ -338,7 +357,7 @@ main{
     aspect-ratio: 1;
   }
 }
-@media (max-width:380px){
+@media (max-width:415px){
   :root{
     --width-ludo:22rem;
     --player-container-width:1.4rem;
@@ -354,5 +373,13 @@ main{
   }
   .box.star svg{
     transform: scale(1);
+  }
+  .roll-container{
+    --number-size:1.1rem;
+  }
+  .roll-btn{
+    width: 2.3rem;
+    font-size: 0.8rem;
+    border-width: 0.08rem;
   }
 }

@@ -227,11 +227,7 @@ main{
   width:100%;
   height:calc(var(--number-size) + 1rem);
   top: 0;
-  /*this doesnt work
-  background-image: url('images/confetti.gif');
-  */
-  /*but this does*/
-  background-image: url('https://www.icegif.com/wp-content/uploads/2023/12/icegif-214.gif');
+  background-image: url(../images/confetti.gif);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

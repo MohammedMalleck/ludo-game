@@ -220,19 +220,6 @@ main{
   color: white;
   --number-size:2rem;
 }
-.roll-container::after{
-  position: absolute;
-  content: '';
-  width:100%;
-  height:calc(var(--number-size) + 1rem);
-  top: 0;
-}
-.roll-container.confetti::after{
-  background-image: url(../images/confetti.gif);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
 .roll-container::before{
   position: absolute;
   top: -.5rem;

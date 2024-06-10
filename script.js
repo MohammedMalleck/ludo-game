@@ -78,6 +78,16 @@ class RollBtn{
   }
 }
 
+//display confetti on scroring 6 or winning
+function handleConfetti(){
+  const confettiSpeed = window.innerWidth > 785 ? 500 : window.innerWidth > 590 ? 300 : 250;
+  confetti({
+    particleCount: 300,
+    spread:confettiSpeed,
+    origin: { y: 0 },
+  });
+}
+
 handlePlayersDefaultPosition();
 document.querySelector('[data-roll-turn="1"]').classList.add('point');
 

@@ -19,7 +19,6 @@ function handlePlayersDefaultPosition(){
     }
   });
 
-  console.log(coordinatesArray)
 
   //poisiton  each player to the exact center of their respective jail.
   //to get the co-ordinates of their respecitve jail access the object using 
@@ -42,9 +41,48 @@ function handlePlayersDefaultPosition(){
   });
 };
 
-window.addEventListener('DOMContentLoaded',()=>{
+class RollBtn{
+  #rollBtnEl;
+  #intervalID;
+  #digit;
+  #timeoutID;
+
+  constructor(element){
+    this.#rollBtnEl = element;
+
+    this.#rollBtnEl.addEventListener('click',()=>{
+      const rollContainerEl = this.#rollBtnEl.parentElement;
+      if(rollContainerEl.classList.contains('point')){
+        rollContainerEl.classList.remove('point');
+        this.#handleRolling();
+        this.#digit = Math.floor(Math.random() * 6) + 1;
+      };
+    });
+  }
+
+  #handleRolling(){
+    this.#intervalID = setInterval(()=>{
+      const numberEl = this.#rollBtnEl.previousSibling.previousSibling;
+      const number = numberEl.innerHTML < 6 ? Number(numberEl.innerHTML) + 1 : 1;
+      numberEl.innerHTML = number;
+    },250);
+
+    this.#timeoutID = setTimeout(()=>{
+      clearInterval(this.#intervalID);
+      this.#intervalID = false;
+
+      this.#rollBtnEl.previousSibling.previousSibling.innerHTML = this.#digit;
+
+      clearTimeout(this.#timeoutID);
+    },2000);
+  }
+}
+
+handlePlayersDefaultPosition();
+document.querySelector('[data-roll-turn="1"]').classList.add('point');
+
+window.addEventListener('resize',()=>{
   handlePlayersDefaultPosition();
-  window.addEventListener('resize',()=>{
-    handlePlayersDefaultPosition();
-  });
 });
+
+document.querySelectorAll('.roll-btn').forEach(rollBtn => { new RollBtn(rollBtn) });

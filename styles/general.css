@@ -221,16 +221,35 @@ main{
   --number-size:2rem;
 }
 .roll-container::after{
-  z-index: 2;
   position: absolute;
   content: '';
   width:100%;
   height:calc(var(--number-size) + 1rem);
   top: 0;
-  /* background-image: url(../images/confetti.gif); */
+}
+.roll-container.confetti::after{
+  background-image: url(../images/confetti.gif);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+}
+.roll-container::before{
+  position: absolute;
+  top: -.5rem;
+  content: '';
+  font-size: 3rem;
+}
+.roll-container.point.green::before,
+.roll-container.point.red::before{
+  content: '👈';
+  left: 100%;
+  animation: pointAnimationLeft 1.3s ease infinite;
+}
+.roll-container.point.yellow::before,
+.roll-container.point.blue::before{
+  content: '👉';
+  right: 100%;
+  animation: pointAnimationRight 1.3s ease infinite;
 }
 .roll-container.yellow{
   right: 110%;
@@ -381,5 +400,17 @@ main{
     width: 2.3rem;
     font-size: 0.8rem;
     border-width: 0.08rem;
+  }
+}
+
+/* animations  */
+@keyframes pointAnimationLeft{
+  50%{
+    transform: translate(50%,0%);
+  }
+}
+@keyframes pointAnimationRight{
+  50%{
+    transform: translate(-50%,0%);
   }
 }

@@ -46,11 +46,6 @@ main{
   color :white;
   transition: scale 0.2s ease;
 }
-.view-btn a{
-  display: inline-block;
-  width:100%;
-  height:100%;
-}
 .play-game-btn::before,
 .view-btn::before,
 .play-btn::before{

@@ -2,7 +2,28 @@ const content = document.querySelector(".players-selection-container");
 const playGameBtn = document.querySelector('.play-game-btn');
 const playGameRect = playGameBtn.getBoundingClientRect();
 
-playGameBtn.addEventListener('click',()=>{
+
+class playGameEvent{
+  #timeoutId;
+  constructor(element){
+
+    element.addEventListener('click',()=>{
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+      if(isTouchDevice){
+        clearTimeout(this.#timeoutId);
+        playGameBtn.classList.add('expand');
+        this.#timeoutId = setTimeout(()=>{
+          handlePlayGame();
+        },450)
+      }else{
+        handlePlayGame();
+      }
+    });
+  }
+}
+
+function handlePlayGame(){
   content.classList.add("show");
   content.style.setProperty("--t", playGameRect.top + "px");
   content.style.setProperty("--r", window.innerWidth - playGameRect.right + "px");
@@ -19,7 +40,9 @@ playGameBtn.addEventListener('click',()=>{
   content.style.setProperty("--b", "0px");
   content.style.setProperty("--l", "0px");
   content.style.setProperty("--br", "0px");
-});
+}
+
+new playGameEvent(playGameBtn);
 
 document.querySelectorAll('.check-container').forEach(checkEl => {
   checkEl.addEventListener('click',()=>{

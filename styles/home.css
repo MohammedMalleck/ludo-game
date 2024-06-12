@@ -46,6 +46,11 @@ main{
   color :white;
   transition: scale 0.2s ease;
 }
+.view-btn a{
+  display: inline-block;
+  width:100%;
+  height:100%;
+}
 .play-game-btn::before,
 .view-btn::before,
 .play-btn::before{
@@ -85,6 +90,18 @@ main{
 .play-game-btn:hover,
 .view-btn:hover,
 .play-btn:hover{
+  scale: 1.1;
+}
+
+/*for touch devices*/
+.play-game-btn.expand::after,
+.view-btn.expand::after,
+.play-btn.expand::after{
+  width: 110%;
+}
+.play-game-btn.expand,
+.view-btn.expand,
+.play-btn.expand{
   scale: 1.1;
 }
 

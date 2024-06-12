@@ -9,6 +9,22 @@
   --player-container-width:3.4rem;
   --player-width:calc(var(--player-container-width) - .4rem);
 }
+.game-page{
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 3;
+  clip-path: inset(0 0 0 var(--screen-width));
+  transition: clip-path 1s ease;
+  color: black;
+
+
+  &.show{
+    clip-path: inset(0 0 0 0);
+  }
+}
 /* header  */
 header{
   width:100%;
@@ -42,7 +58,7 @@ li{
   width: 4rem;
   aspect-ratio: 1;
 }
-main{
+.game-container{
   height:calc(100vh - 5rem);
   height:calc(100svh - 5rem);
   background-color:var(--primary-color);

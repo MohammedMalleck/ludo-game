@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ludo Game</title>
+  <link rel="stylesheet" href="styles/general.css">
+  <link rel="stylesheet" href="styles/home.css">
+</head>
+<body>
+  <main>
+    <h1>Ludo Game</h1>
+    <div class="btns-container">
+      <div class="play-game-btn"></div>
+      <button class="view-btn"></button>
+    </div>
+
+    <section class="players-selection-container">
+      <div class="players-selection-holder">
+        <h2>Choose Players & Customize</h2>
+
+        <div class="check-container green">
+          <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" fill="none"/>
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" stroke="var(--green-color)"/>
+          </svg>
+          <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="11" height="11" rx="5.5" fill="var(--green-color)"/>
+            <path d="M2 5.85714L4.5 8L9 3" stroke="white"/>
+          </svg>
+        </div>
+        <input type="text" value="Green">
+        <button class="upload-image-btn">Upload Image</button>
+
+        <div class="check-container yellow">
+          <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" fill="none"/>
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" stroke="var(--yellow-color)"/>
+          </svg>
+          <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="11" height="11" rx="5.5" fill="var(--yellow-color)"/>
+            <path d="M2 5.85714L4.5 8L9 3" stroke="white"/>
+          </svg>
+        </div>
+        <input type="text" value="Yellow">
+        <button class="upload-image-btn">Upload Image</button>
+
+        <div class="check-container blue">
+          <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" fill="none"/>
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" stroke="var(--blue-color)"/>
+          </svg>
+          <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="11" height="11" rx="5.5" fill="var(--blue-color)"/>
+            <path d="M2 5.85714L4.5 8L9 3" stroke="white"/>
+          </svg>
+        </div>
+        <input type="text" value="Blue">
+        <button class="upload-image-btn">Upload Image</button>
+
+        <div class="check-container red">
+          <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" fill="none"/>
+            <rect x="0.25" y="0.25" width="12.5" height="12.5" rx="50%" stroke="var(--red-color)"/>
+          </svg>
+          <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="11" height="11" rx="5.5" fill="var(--red-color)"/>
+            <path d="M2 5.85714L4.5 8L9 3" stroke="white"/>
+          </svg>
+        </div>
+        <input type="text" value="Red">
+        <button class="upload-image-btn">Upload Image</button>
+
+        <div class="play-btn-container">
+          <button class="play-btn"></button>    
+        </div>    
+      </div>
+    </section>
+  </main>
+  <script src="script/home.js"></script>
+</body>
+</html>

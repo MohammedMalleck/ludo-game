@@ -270,6 +270,7 @@ li{
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
+  cursor: default;
 }
 .roll-container::before{
   position: absolute;
@@ -291,7 +292,7 @@ li{
 }
 .numbers{
   font-size:2rem;
-  cursor: auto;
+  cursor:default;
 }
 .roll-btn{
   border: none;

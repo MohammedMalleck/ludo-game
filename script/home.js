@@ -1,6 +1,6 @@
 const content = document.querySelector(".players-selection-container");
 const playGameBtn = document.querySelector('.play-game-btn');
-const playGameRect = playGameBtn.getBoundingClientRect();
+
 
 
 class playGameEvent{
@@ -24,6 +24,7 @@ class playGameEvent{
 }
 
 function handlePlayGame(){
+  const playGameRect = playGameBtn.getBoundingClientRect();
   content.classList.add("show");
   content.style.setProperty("--t", playGameRect.top + "px");
   content.style.setProperty("--r", window.innerWidth - playGameRect.right + "px");

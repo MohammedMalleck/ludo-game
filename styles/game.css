@@ -21,9 +21,11 @@
   transition: clip-path 1s ease;
   color: black;
   opacity: 0;
+  pointer-events: none;
 
   &.show{
     opacity: 1;
+    pointer-events: all;
     clip-path: inset(0 0 0 0);
   }
 }

@@ -8,6 +8,7 @@
   --width-ludo:52rem;
   --player-container-width:3.4rem;
   --player-width:calc(var(--player-container-width) - .4rem);
+  --box-shadow:0rem 0rem 0.5rem rgba(255,255,255,0.5);
 }
 .game-page{
   position: fixed;
@@ -73,7 +74,7 @@ li{
   display: grid;
   grid-template-columns: repeat(15,calc(var(--width-ludo)/15));
   position: relative;
-  box-shadow: 0rem 0rem 0.5rem rgba(255,255,255,0.5);
+  box-shadow: var(--box-shadow);
 }
 .box{
   height:calc(var(--width-ludo)/15);
@@ -220,15 +221,59 @@ li{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: .5rem;
   color: white;
-  --number-size:2rem;
+  padding: 1rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--box-shadow);
+
+  border-width: 0.1rem;
+  border-style:solid;
+
+  &.green{
+    border-color: var(--green-color);
+    left: 110%;
+  }
+  &.yellow{
+    border-color: var(--yellow-color);
+    right: 110%;
+  }
+  &.blue{
+    border-color: var(--blue-color);
+    top: 60%;
+    right: 110%;
+  }
+  &.red{
+    border-color: var(--red-color);
+    top: 60%;
+    left: 110%;
+  }
+}
+.user-picture{
+  width:5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img{
+    width: 100%;
+    height: 100%;
+  }
+}
+.user-name{
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .roll-container::before{
   position: absolute;
-  top: -.5rem;
+  top: 50%;
   content: '';
-  font-size: calc(var(--number-size) + 1rem);
+  font-size:3rem;
 }
 .roll-container.point.green::before,
 .roll-container.point.red::before{
@@ -242,22 +287,9 @@ li{
   right: 100%;
   animation: pointAnimationRight 1.3s ease infinite;
 }
-.roll-container.yellow{
-  right: 110%;
-}
-.roll-container.green{
-  left: 110%;
-}
-.roll-container.blue{
-  bottom: 29%;
-  right: 110%;
-}
-.roll-container.red{
-  bottom: 29%;
-  left: 110%;
-}
 .numbers{
-  font-size: var(--number-size);
+  font-size:2rem;
+  cursor: auto;
 }
 .roll-btn{
   border: none;
@@ -267,27 +299,12 @@ li{
   cursor: pointer;
   transition: filter 0.15s ease;
   box-shadow: 0rem 0rem 1rem rgba(0,0,0,0.5);
-  border-width:0.15rem;
-  border-style: solid;
 }
 .roll-btn:hover{
   filter: brightness(97%);
 }
-.roll-container.yellow .roll-btn{
-  border-color:  var(--yellow-color);
-}
-.roll-container.green .roll-btn{
-  border-color:  var(--green-color);
-}
-.roll-container.blue .roll-btn{
-  border-color:  var(--blue-color);
-}
-.roll-container.red .roll-btn{
-  border-color:  var(--red-color);
-}
-
 /*media queries*/
-@media(max-width:855px){
+@media(max-width:955px){
   :root{
     --width-ludo:47rem;
     --player-container-width:3.2rem;
@@ -301,8 +318,22 @@ li{
   .box.star svg{
     transform: scale(2);
   }
+  .numbers{
+    font-size:1.8rem;
+  }
+  .roll-container::before{
+    font-size: 2.5rem;
+  }
+  .roll-btn{
+    width: 4.5rem;
+    padding: 0.2rem 0rem;
+    font-size: 1.3rem;
+  }
+  .user-picture{
+    width: 4rem;
+  }
 }
-@media(max-width:785px){
+@media(max-width:850px){
   :root{
     --width-ludo:35rem;
     --player-container-width:2.3rem;
@@ -320,15 +351,27 @@ li{
     transform: scale(1.5);
   }
   .roll-container{
-    --number-size:1.5rem;
+    padding: .8rem 1.8rem;
+  }
+  .numbers{
+    font-size:1.5rem;
+  }
+  .roll-container::before{
+    font-size: 2rem;
   }
   .roll-btn{
     width: 4rem;
-    padding: 0.3rem 0rem;
+    padding: 0.15rem 0rem;
     font-size: 1.2rem;
   }
+  .user-picture{
+    width: 3rem;
+  }
+  .user-name{
+    font-size: 1.5rem;
+  }
 }
-@media (max-width:590px){
+@media (max-width:675px){
   :root{
     --width-ludo:27rem;
     --player-container-width:1.8rem;
@@ -345,17 +388,41 @@ li{
   .box.star svg{
     transform: scale(1.2);
   }
+  .roll-container::before{
+    font-size: 1.5rem;
+  }
   .roll-container{
-    --number-size:1.3rem;
+    padding: .7rem 1rem;
+    gap: .25rem;
+  }
+  .numbers{
+    font-size:1rem;
   }
   .roll-btn{
     width: 3rem;
     padding: 0.1rem 0rem;
     font-size: 1rem;
     border-width: 0.1rem;
+    font-size: .8rem;
+  }
+  .user-picture{
+    width: 2.3rem;
+  }
+  .user-name{
+    font-size: 1rem;
   }
 }
-@media (max-width:480px){
+@media (max-width:500px){
+  header{
+    padding: 0rem 1rem;
+  }
+  .site-name{
+    font-size: 1.8rem;
+  }
+  li{
+    width: 3.7rem;
+    aspect-ratio: 1;
+  }
   :root{
     --width-ludo:22rem;
     --player-container-width:1.4rem;
@@ -373,30 +440,73 @@ li{
     transform: scale(1);
   }
   .roll-container{
-    --number-size:1.1rem;
+    padding: .5rem .7rem;
+    gap: .25rem;
+    border-radius: .5rem;
+  }
+  .roll-container::before{
+    font-size:1rem;
   }
   .roll-btn{
     width: 2.3rem;
-    font-size: 0.8rem;
+    font-size:.7rem;
     border-width: 0.08rem;
+  }
+  .user-picture{
+    width: 2rem;
+  }
+  .user-name{
+    font-size: .8rem;
   }
 }
 @media (max-width:420px){
-  header{
-    padding: 0rem 1rem;
+  .roll-container.point.green::before,
+  .roll-container.point.red::before{
+    top: 110%;
+    left: 35%;
+    content: '👆';
+    animation: pointAnimationTopBottom 1.3s ease infinite;
   }
-  .site-name{
-    font-size: 1.8rem;
-  }
-  li{
-    width: 3.7rem;
-    aspect-ratio: 1;
+  .roll-container.point.yellow::before,
+  .roll-container.point.blue::before{
+    top: 110%;
+    right: 35%;
+    content: '👆';
+    animation: pointAnimationTopBottom 1.3s ease infinite;
   }
 }
-@media (max-width:390px){
+@media (max-width:370px){
+  .roll-container{
+    padding: .3rem .7rem;
+    gap: .25rem;
+
+    &.green{
+      left: 105%;
+    }
+    &.yellow{
+      right: 105%;
+    }
+    &.blue{
+      right: 105%;
+    }
+    &.red{
+      left: 105%;
+    }
+  }
+  .numbers,
   .roll-container::before{
-    font-size: 1.3rem;
-    top: -.25rem;
+    font-size:.7rem;
+  }
+  .roll-btn{
+    width: 1.7rem;
+    font-size:.5rem;
+    border-width: 0.08rem;
+  }
+  .user-picture{
+    width: 1.2rem;
+  }
+  .user-name{
+    font-size: .7rem;
   }
 }
 @media (max-width:360px){
@@ -418,5 +528,10 @@ li{
 @keyframes pointAnimationRight{
   50%{
     transform: translate(-50%,0%);
+  }
+}
+@keyframes pointAnimationTopBottom{
+  50%{
+    transform: translate(0%,-30%);
   }
 }

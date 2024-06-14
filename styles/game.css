@@ -249,6 +249,7 @@ li{
   cursor: pointer;
   transition: filter 0.15s ease ,left 0.15s ease , top 0.15s ease;
   display:flex;
+  z-index: 4;
 
   &:hover{
     filter: brightness(95%);

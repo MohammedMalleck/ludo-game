@@ -16,6 +16,7 @@
   bottom: 0px;
   left: 0px;
   right: 0px;
+  overflow-y: scroll;
   z-index: 3;
   clip-path: inset(0 0 0 var(--screen-width));
   transition: clip-path 1s ease;
@@ -29,9 +30,15 @@
     clip-path: inset(0 0 0 0);
   }
 }
+.game-page::-webkit-scrollbar{
+  display: none;
+}
 /* header  */
 header{
-  width:100%;
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  right: 0px; 
   height: 5rem;
   background-color: white;
   box-shadow: 0rem 0.5rem 2rem rgba(var(--primary-color),0.3);
@@ -39,6 +46,7 @@ header{
   align-items: center;
   justify-content: space-between;
   padding: 0rem 2rem;
+  z-index: 1;
 }
 .site-name{
   font-size:2.2rem;
@@ -52,23 +60,50 @@ ul{
   gap:1rem;
 }
 li{
-  font-size: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.2rem;
-}
-li{
-  font-size: 1.6rem;
   width: 4rem;
   aspect-ratio: 1;
 }
 .game-container{
-  height:calc(100vh - 5rem);
-  height:calc(100svh - 5rem);
+  min-height:calc(100vh - 5rem);
+  min-height:calc(100svh - 5rem);
   background-color:var(--primary-color);
   display: flex;
-  justify-content: center;
-  padding-top:2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding:1rem;
+  overflow-y: auto;
+}
+.quit-game-btn{
+  border: none;
+  background-color:transparent;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+  padding: .3rem 0rem;
+  cursor: pointer;
+  position: relative;
+  font-size: 1.8rem;
+
+  &::after{
+    position: absolute;
+    top:100%;
+    left:50%;
+    content:  '';
+    width: 0%;
+    height: .15rem;
+    background-color: white;
+    transition: width 0.3s ease , left 0.3s ease;
+    pointer-events: none;
+  }
+
+  &:hover::after{
+    width: 100%;
+    left: 0%;
+  }
 }
 .ludo-container{
   width:var(--width-ludo);
@@ -338,8 +373,14 @@ li{
   .user-picture{
     width: 4rem;
   }
+  .quit-game-btn{
+    font-size: 1.6rem;
+  }
 }
 @media(max-width:850px){
+  .site-name{
+    font-size: 2rem;
+  }
   :root{
     --width-ludo:35rem;
     --player-container-width:2.3rem;
@@ -376,8 +417,21 @@ li{
   .user-name{
     font-size: 1.5rem;
   }
+  .quit-game-btn{
+    font-size: 1.5rem;
+  }
 }
 @media (max-width:675px){
+  header{
+    padding: 0rem 1.3rem;
+  }
+  .site-name{
+    font-size: 1.8rem;
+  }
+  li{
+    width: 3.5rem;
+    font-size: 1.5rem;
+  }
   :root{
     --width-ludo:27rem;
     --player-container-width:1.8rem;
@@ -417,17 +471,20 @@ li{
   .user-name{
     font-size: 1rem;
   }
+  .quit-game-btn{
+    font-size: 1.4rem;
+  }
 }
-@media (max-width:500px){
+@media (max-width:490px){
   header{
-    padding: 0rem 1rem;
+    padding: 0rem .8rem;
   }
   .site-name{
-    font-size: 1.8rem;
+    font-size: 1.65rem;
   }
   li{
-    width: 3.7rem;
-    aspect-ratio: 1;
+    width: 3.2rem;
+    font-size: 1.35rem;
   }
   :root{
     --width-ludo:22rem;
@@ -464,8 +521,23 @@ li{
   .user-name{
     font-size: .8rem;
   }
+  .quit-game-btn{
+    border-bottom: .1rem solid white;
+    font-size: 1.2rem;
+
+    &::after{
+      display: none;
+    }
+  }
 }
 @media (max-width:420px){
+  header{
+    height: 4rem;
+  }
+  .game-container{
+    min-height:calc(100vh - 4rem);
+    min-height:calc(100svh - 4rem);
+  }
   .roll-container.point.green::before,
   .roll-container.point.red::before{
     top: 110%;
@@ -513,6 +585,9 @@ li{
   }
   .user-name{
     font-size: .7rem;
+  }
+  .quit-game-btn{
+    font-size: 1rem;
   }
 }
 @media (max-width:360px){

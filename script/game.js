@@ -88,6 +88,29 @@ function handleConfetti(){
   });
 }
 
+function movePlayerToBoard(playerEl){
+  //player color('yellow,red'e.t.c)
+  const home = playerEl.classList[1];
+  //get the players rect values
+  const {top , left} = playerEl.style;
+  const playerElTop = Number(top.replace('px',''));
+  const playerElLeft = Number(left.replace('px',''));
+  const playerElWidth = playerEl.clientWidth;
+  const playerElHeight = playerEl.clientHeight;
+  //get the respective player in the header and its rect values
+  //get the values to center the player with the respective player in the header
+  const {top : scoreSvgTop,left : scoreSvgLeft,width : scoreSvgWidth,height : scoreSvgHeight} =  document.querySelector(`li.${home} > svg`).getBoundingClientRect();
+  const scoreSvgCenterTop = (scoreSvgTop + ((scoreSvgHeight/2) - (playerElHeight/2))).toFixed(3);
+  const scoreSvgCenterLeft = (scoreSvgLeft + ((scoreSvgWidth/2) - (playerElWidth/2))).toFixed(3);
+  //set the css variables on the player responsible for the animation
+  playerEl.style.setProperty("--current-top", (playerElTop - 50).toFixed(3) + "px");
+  playerEl.style.setProperty("--current-left", (playerElLeft - 50).toFixed(3) + "px");
+  playerEl.style.setProperty("--board-player-top", scoreSvgCenterTop  + "px");
+  playerEl.style.setProperty("--board-player-left", scoreSvgCenterLeft + "px");
+  //add the class to enable animation
+  playerEl.classList.add('done');
+}
+
 handlePlayersDefaultPosition();
 document.querySelector('[data-roll-turn="1"]').classList.add('point');
 
@@ -96,3 +119,12 @@ window.addEventListener('resize',()=>{
 });
 
 document.querySelectorAll('.roll-btn').forEach(rollBtn => { new RollBtn(rollBtn) });
+
+document.querySelectorAll('.player.done').forEach( playerEl => {
+  playerEl.addEventListener('animationend',()=>{
+    const home = playerEl.classList[1];
+    const scoreTxtEl = document.querySelector(`li.${home} > div`);
+    scoreTxtEl.innerHTML = ++scoreTxtEl.textContent;
+    playerEl.style.display = 'none';
+  });
+});

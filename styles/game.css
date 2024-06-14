@@ -214,6 +214,9 @@ li{
   width: 100%;
   height: 100%;
 }
+.player.done{
+  animation: moveToBoard 2500ms ease forwards;
+}
 
 /* dice styles  */
 
@@ -536,5 +539,15 @@ li{
 @keyframes pointAnimationTopBottom{
   50%{
     transform: translate(0%,-30%);
+  }
+}
+@keyframes moveToBoard{
+  30%{
+    top :var(--current-top);
+    left: var(--current-left);
+  }
+  100%{
+    top :var(--board-player-top);
+    left: var(--board-player-left);
   }
 }

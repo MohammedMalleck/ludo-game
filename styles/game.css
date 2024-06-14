@@ -29,9 +29,9 @@
     pointer-events: all;
     clip-path: inset(0 0 0 0);
   }
-}
-.game-page::-webkit-scrollbar{
-  display: none;
+   &::-webkit-scrollbar{
+    display: none;
+   }
 }
 /* header  */
 header{
@@ -125,6 +125,10 @@ li{
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.star svg{
+    transform: scale(2.5);
+  }
 }
 .jail-container{
   grid-column: span 6;
@@ -154,27 +158,22 @@ li{
 .player-container.red{
   background-color: var(--red-color);
 }
-.box.arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .arrow-svg-container{
   width: fit-content;
   height: fit-content;
   scale: 0.8;
-}
-.arrow-svg-container.yellow{
-  rotate: 90deg;
-}
-.arrow-svg-container.red{
-  rotate : -90deg;
-}
-.arrow-svg-container.green{
-  rotate : 180deg;
-}
-.box.star svg{
-  transform: scale(2.5);
+
+  &.yellow{
+    rotate: 90deg;
+  }
+
+  &.red{
+    rotate : -90deg;
+  }
+
+  &.green{
+    rotate : 180deg;
+  }
 }
 .jail{
   height: 100%;
@@ -201,10 +200,11 @@ li{
   grid-column: span 3;
   grid-row: span 3;
   display:flex;
-}
-.home-container svg{
-  width: 100%;
-  height: 100%;
+
+  & svg{
+    width: 100%;
+    height: 100%;
+  }
 }
 .home-text{
   position: absolute;
@@ -213,27 +213,30 @@ li{
   text-shadow: 0px 0px 5px rgba(0,0,0,0.3);
   cursor: default;
   font-size: 1.5rem;
-}
-/**/
-.home-text:nth-child(2){
-  bottom: 85%;
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-}
-.home-text:nth-child(3){
-  top: 50%;
-  left: 74%;
-  transform:translate(0%,-50%) rotate(-90deg);
-}
-.home-text:nth-child(4){
-  top: 50%;
-  right: 74%;
-  transform:translate(0%,-50%) rotate(90deg);
-}
-.home-text:nth-child(5){
-  top: 85%;
-  left: 50%;
-  transform: translateX(-50%);
+
+  &:nth-child(2){
+    bottom: 85%;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+  }
+
+  &:nth-child(3){
+    top: 50%;
+    left: 74%;
+    transform:translate(0%,-50%) rotate(-90deg);
+  }
+
+  &:nth-child(4){
+    top: 50%;
+    right: 74%;
+    transform:translate(0%,-50%) rotate(90deg);
+  }
+
+  &:nth-child(5){
+    top: 85%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 /*players*/
@@ -246,18 +249,20 @@ li{
   cursor: pointer;
   transition: filter 0.15s ease ,left 0.15s ease , top 0.15s ease;
   display:flex;
-}
-.player:hover{
-  filter: brightness(95%);
-}
-.player svg{
-  width: 100%;
-  height: 100%;
-}
-.player.done{
-  animation: moveToBoard 2500ms ease forwards;
-}
 
+  &:hover{
+    filter: brightness(95%);
+  }
+
+  & svg{
+    width: 100%;
+    height: 100%;
+  }
+
+  &.done{
+    animation: moveToBoard 2500ms ease forwards;
+  }
+}
 /* dice styles  */
 
 .roll-container{
@@ -293,6 +298,28 @@ li{
     top: 60%;
     left: 110%;
   }
+
+  &::before{
+    position: absolute;
+    top: 50%;
+    content: '';
+    font-size:3rem;
+  }
+
+  &.point.green::before,
+  &.point.red::before{
+    content: '👈';
+    left: 100%;
+    animation: pointAnimationLeft 1.3s ease infinite;
+  }
+
+  &.point.yellow::before,
+  &.point.blue::before{
+    content: '👉';
+    right: 100%;
+    animation: pointAnimationRight 1.3s ease infinite;
+  }
+   
 }
 .user-picture{
   width:5rem;
@@ -315,24 +342,6 @@ li{
   white-space: nowrap;
   cursor: default;
 }
-.roll-container::before{
-  position: absolute;
-  top: 50%;
-  content: '';
-  font-size:3rem;
-}
-.roll-container.point.green::before,
-.roll-container.point.red::before{
-  content: '👈';
-  left: 100%;
-  animation: pointAnimationLeft 1.3s ease infinite;
-}
-.roll-container.point.yellow::before,
-.roll-container.point.blue::before{
-  content: '👉';
-  right: 100%;
-  animation: pointAnimationRight 1.3s ease infinite;
-}
 .numbers{
   font-size:2rem;
   cursor:default;
@@ -345,9 +354,10 @@ li{
   cursor: pointer;
   transition: filter 0.15s ease;
   box-shadow: 0rem 0rem 1rem rgba(0,0,0,0.5);
-}
-.roll-btn:hover{
-  filter: brightness(97%);
+
+  &:hover{
+    filter: brightness(97%);
+  }
 }
 /*media queries*/
 @media(max-width:955px){
@@ -404,12 +414,13 @@ li{
   }
   .roll-container{
     padding: .8rem 1.8rem;
+
+    &::before{
+      font-size: 2rem;
+    }
   }
   .numbers{
     font-size:1.5rem;
-  }
-  .roll-container::before{
-    font-size: 2rem;
   }
   .roll-btn{
     width: 4rem;
@@ -453,12 +464,13 @@ li{
   .box.star svg{
     transform: scale(1.2);
   }
-  .roll-container::before{
-    font-size: 1.5rem;
-  }
   .roll-container{
     padding: .7rem 1rem;
     gap: .25rem;
+
+    &::before{
+      font-size: 1.5rem;
+    }
   }
   .numbers{
     font-size:1rem;
@@ -511,9 +523,10 @@ li{
     padding: .5rem .7rem;
     gap: .25rem;
     border-radius: .5rem;
-  }
-  .roll-container::before{
-    font-size:1rem;
+
+    &::before{
+      font-size:1rem;
+    }
   }
   .roll-btn{
     width: 2.3rem;
@@ -543,19 +556,22 @@ li{
     min-height:calc(100vh - 4rem);
     min-height:calc(100svh - 4rem);
   }
-  .roll-container.point.green::before,
-  .roll-container.point.red::before{
-    top: 110%;
-    left: 35%;
-    content: '👆';
-    animation: pointAnimationTopBottom 1.3s ease infinite;
-  }
-  .roll-container.point.yellow::before,
-  .roll-container.point.blue::before{
-    top: 110%;
-    right: 35%;
-    content: '👆';
-    animation: pointAnimationTopBottom 1.3s ease infinite;
+  .roll-container.point{
+    &.green::before,
+    &.red::before{
+      top: 110%;
+      left: 35%;
+      content: '👆';
+      animation: pointAnimationTopBottom 1.3s ease infinite;
+    }
+
+    &.yellow::before,
+    &.blue::before{
+      top: 110%;
+      right: 35%;
+      content: '👆';
+      animation: pointAnimationTopBottom 1.3s ease infinite;
+    }
   }
 }
 @media (max-width:370px){
@@ -576,9 +592,8 @@ li{
       left: 105%;
     }
   }
-  .numbers,
-  .roll-container::before{
-    font-size:.7rem;
+  .numbers{
+    font-size:1rem;
   }
   .roll-btn{
     width: 1.7rem;
@@ -592,11 +607,6 @@ li{
     font-size: .7rem;
   }
   .quit-game-btn{
-    font-size: 1rem;
-  }
-}
-@media (max-width:360px){
-  .roll-container::before{
     font-size: 1rem;
   }
 }

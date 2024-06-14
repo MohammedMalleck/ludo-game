@@ -46,60 +46,57 @@ main{
   color :white;
   transition: scale 0.2s ease;
 }
-.play-game-btn::before,
-.view-btn::before,
-.play-btn::before{
-  z-index: 2;
-  position: absolute;
-  width: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  text-align: center;
-}
 .play-game-btn::before{
   content: 'Play Game';
 }
 .view-btn::before{
   content: 'View Guide';
 }
-.play-game-btn::after,
-.view-btn::after,
-.play-btn::after{
-  position: absolute;
-  content: '';
-  width:0%;
-  aspect-ratio: 1;
-  background-color: var(--primary-color);
-  bottom: -100%;
-  left: -10px;
-  border-radius: 50%;
-  transition: width 0.5s ease;
-  pointer-events: none;
-} 
-.play-game-btn:hover::after,
-.view-btn:hover::after,
-.play-btn:hover::after{
-  width: 110%;
-}
-.play-game-btn:hover,
-.view-btn:hover,
-.play-btn:hover{
-  scale: 1.1;
-}
+.play-game-btn,
+.view-btn,
+.play-btn{
 
-/*for touch devices*/
-.play-game-btn.expand::after,
-.view-btn.expand::after,
-.play-btn.expand::after{
-  width: 110%;
-}
-.play-game-btn.expand,
-.view-btn.expand,
-.play-btn.expand{
-  scale: 1.1;
-}
+  &::before{
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+  }
 
+  &::after{
+    position: absolute;
+    content: '';
+    width:0%;
+    aspect-ratio: 1;
+    background-color: var(--primary-color);
+    bottom: -100%;
+    left: -10px;
+    border-radius: 50%;
+    transition: width 0.5s ease;
+    pointer-events: none;
+  }
+
+  &:hover::after{
+    width: 110%;
+  }
+
+  &:hover{
+    scale: 1.1;
+  }
+
+  /*for touch devices*/
+
+  &.expand::after{
+    width: 110%;
+  }
+
+  &.expand{
+    scale: 1.1;
+  }
+}
 /*players selection  styles*/
 .players-selection-container{
   position: fixed;
@@ -110,10 +107,11 @@ main{
   display: none;
   align-items: center;
   justify-content: center;
-}
-.players-selection-container.show{
-  clip-path: inset(var(--t) var(--r) var(--b) var(--l) round var(--br));
-  display: flex;
+
+  &.show{
+    clip-path: inset(var(--t) var(--r) var(--b) var(--l) round var(--br));
+    display: flex;
+  }
 }
 .players-selection-holder{
   flex: 1;
@@ -125,16 +123,18 @@ main{
   padding: 0rem 1rem;
   text-align: center;
   gap: 1rem;
-}
-.players-selection-holder h2{
-  grid-column: span 3;
-  margin-bottom: 3rem;
-  text-shadow:0px 0px 1rem rgba(0,0,0,0.3);
-}
-.players-selection-holder input{
-  border: none;
-  padding: .5rem 0rem;
-  outline: none;
+
+  & h2{
+    grid-column: span 3;
+    margin-bottom: 3rem;
+    text-shadow:0px 0px 1rem rgba(0,0,0,0.3);
+  }
+
+  & input{
+    border: none;
+    padding: .5rem 0rem;
+    outline: none;
+  }
 }
 .check-container {
   width:2rem;
@@ -148,40 +148,48 @@ main{
   border-width: 0.1rem;
   border-style:solid;
   box-shadow: 0rem 0rem 0.5rem rgba(255,255,255,0.5);
-}
-.check-container.green{
-  border-color: var(--green-color);
-}
-.check-container.yellow{
-  border-color:var(--yellow-color);
-}
-.check-container.blue{
-  border-color: var(--blue-color);
-}
-.check-container.red{
-  border-color: var(--red-color);
-}
-.check-container svg:nth-child(1) {
-  width: 100%;
-  height: 100%;
-  stroke-width:.5;
-  stroke-dasharray:50;
-  stroke-dashoffset:50;
-}
-.check-container svg:nth-child(2) {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  stroke-dasharray: 10;
-  stroke-dashoffset: 10;
-  transform: scale(0);
-}
-.check-container.check svg:nth-child(1){
-  animation: outline 1s ease forwards;
-}
-.check-container.check svg:nth-child(2) {
-  animation: checkAni 0.5s ease forwards;
-  animation-delay: 0.5s;
+
+  &.green{
+    border-color: var(--green-color);
+  }
+
+  &.yellow{
+    border-color:var(--yellow-color);
+  }
+
+  &.blue{
+    border-color: var(--blue-color);
+  }
+
+  &.red{
+    border-color: var(--red-color);
+  }
+
+  & svg:nth-child(1){
+    width: 100%;
+    height: 100%;
+    stroke-width:.5;
+    stroke-dasharray:50;
+    stroke-dashoffset:50;
+  }
+
+  & svg:nth-child(2){
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    stroke-dasharray: 10;
+    stroke-dashoffset: 10;
+    transform: scale(0);
+  }
+
+  &.check svg:nth-child(1){
+    animation: outline 1s ease forwards; 
+  }
+
+  &.check svg:nth-child(2){
+    animation: checkAni 0.5s ease forwards;
+    animation-delay: 0.5s; 
+  }
 }
 /*upload button*/
 .upload-image-btn{
@@ -193,9 +201,10 @@ main{
   font-size: 1.2rem;
   cursor: pointer;
   transition: filter 0.15s ease;
-}
-.upload-image-btn:hover{
-  filter: brightness(94%);
+  
+  &:hover{
+    filter: brightness(94%);
+  }
 }
 .play-btn-container{
   grid-column: span 3;
@@ -222,12 +231,14 @@ main{
   height: 2.8rem;
   font-size: 1.5rem;
   transition: scale 0.2s ease;
-}
-.play-btn::after{
-  left: -5px;
-}
-.play-btn::before{
-  content: 'Play >';
+
+  &::after{
+    left: -5px;
+  }
+
+  &::before{
+    content: 'Play >';
+  }
 }
 
 @media(max-width:305px){

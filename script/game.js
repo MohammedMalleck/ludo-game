@@ -41,6 +41,32 @@ function handlePlayersDefaultPosition(){
   });
 };
 
+function setBoxesCoordinates(){
+  //create boxes objects
+  const boxesObj = {coordinatesName : 'boxes'};
+  const homeBoxesObj = {coordinatesName : 'homeBoxes'};
+
+  const {width : playerWidth , height : playerHeight}= document.querySelector('.player').getBoundingClientRect(); 
+
+  document.querySelectorAll('.box').forEach( box =>{
+    const {top ,left , width : boxWidth , height : boxHeight} = box.getBoundingClientRect();
+    const {homeBox,boxNum} = box.dataset;
+    //if the box is a home box add the 
+    //coordinates of the box in the home box object
+    //and vice versa
+    if(homeBox){
+      homeBoxesObj[`boxTop${boxNum}`] = `${(top + ((boxHeight / 2) - (playerHeight / 2))).toFixed(3)}px`;
+      homeBoxesObj[`boxLeft${boxNum}`] = `${(left + ((boxWidth / 2) - (playerWidth / 2))).toFixed(3)}px`;
+      homeBoxesObj[`boxEl${boxNum}`] = box;
+    }else{
+      boxesObj[`boxTop${boxNum}`] = `${(top + ((boxHeight / 2) - (playerHeight / 2))).toFixed(3)}px`;
+      boxesObj[`boxLeft${boxNum}`] = `${(left + ((boxWidth / 2) - (playerWidth / 2))).toFixed(3)}px`;
+      boxesObj[`boxEl${boxNum}`] = box;
+    }   
+  });
+  //add both objects in the coordinates array
+  coordinatesArray.push(boxesObj,homeBoxesObj);
+}
 class RollBtn{
   #rollBtnEl;
   #intervalID;
@@ -112,6 +138,8 @@ function movePlayerToBoard(playerEl){
 }
 
 handlePlayersDefaultPosition();
+setBoxesCoordinates();
+console.log(coordinatesArray)
 document.querySelector('[data-roll-turn="1"]').classList.add('point');
 
 window.addEventListener('resize',()=>{

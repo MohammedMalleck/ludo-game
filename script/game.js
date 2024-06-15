@@ -1,34 +1,39 @@
 const coordinatesArray = [];
 
 function handlePlayersDefaultPosition(){
+  const playerElWidth = document.querySelector('.player').clientWidth;
   //set the co-ordinates of each jail container.
   //use its class to  create an object ie(for the class red you would create red-jails obj e.t.c),
   //and use its jailNum attr to determine its left top number(ie:left1,top1...);
-  document.querySelectorAll('.player-container').forEach((playerContainerEl)=>{
-    const {left,top}  = playerContainerEl.getBoundingClientRect();
+  const jailsCoordinates = Array.from(document.querySelectorAll('.player-container')).reduce((acc,playerContainerEl)=>{
+    const {left,top,width : playerContainerWidth}  = playerContainerEl.getBoundingClientRect();
+    const centerTop = calculateCenter(top,playerContainerWidth,playerElWidth) + 'px';
+    const centerLeft = calculateCenter(left,playerContainerWidth,playerElWidth) + 'px';
+
     const {jailNum} = playerContainerEl.dataset;
     const jailCoordinateName = playerContainerEl.classList[1] + '-jails';
-    const coordinatesObject = coordinatesArray.find(coordinatesObj => coordinatesObj.coordinatesName === jailCoordinateName);
+    const coordinatesObject = acc.find(coordinatesObj => coordinatesObj.coordinatesName === jailCoordinateName);
+    //the object exists already then add new values of the respective jail
+    //if not then add the respective jail object with first values
     if(coordinatesObject){
-      const keyLeft = 'left' + `${jailNum}`;
-      const keyTOP = 'top' + `${jailNum}`;
-      coordinatesObject[`${keyLeft}`] =left; 
-      coordinatesObject[`${keyTOP}`] = top; 
+      coordinatesObject[`left${jailNum}`] = centerLeft ; 
+      coordinatesObject[`top${jailNum}`] = centerTop ; 
     }else{
-      coordinatesArray.push({'coordinatesName' : jailCoordinateName, 'top1' : top , 'left1' : left});
+      acc.push({'coordinatesName' : jailCoordinateName, 'top1' : centerTop , 'left1' : centerLeft});
     }
-  });
+    return acc;
+  },[]);
+
+  //add the jails coordinates objects in coordinatesArray
+  coordinatesArray.push(...jailsCoordinates);
 
 
-  //poisiton  each player to the exact center of their respective jail.
-  //to get the co-ordinates of their respecitve jail access the object using 
+  //to get the co-ordinates of players respecitve jail access the object using 
   //the players class name.
   //after this access the exact left and top values by using the playerNum attr
   //ie(if player class is  red and num attr  1 then you would access red-jails object and properties
   //top1,left1);
   document.querySelectorAll('.player').forEach((playerEl)=>{
-    const {width : playerWidth} = playerEl.getBoundingClientRect();
-    const {width : playerContainerWidth } = document.querySelector('.player-container').getBoundingClientRect()
     const playerName = playerEl.classList[1] + '-jails';
     const {playerNum} = playerEl.dataset;
     const coordinatesObject = coordinatesArray.find(coordinatesObj => coordinatesObj.coordinatesName === playerName);
@@ -36,37 +41,43 @@ function handlePlayersDefaultPosition(){
     const left = coordinatesObject[`left${playerNum}`];
     const top = coordinatesObject[`top${playerNum}`];
 
-    playerEl.style.left = `${calculateCenter(left,playerContainerWidth,playerWidth)}px`
-    playerEl.style.top = `${calculateCenter(top,playerContainerWidth,playerWidth)}px`;
+    playerEl.style.left = left;
+    playerEl.style.top = top;
   });
 };
 
 function setBoxesCoordinates(){
-  //create boxes objects
-  const boxesObj = {coordinatesName : 'boxes'};
-  const homeBoxesObj = {coordinatesName : 'homeBoxes'};
-
   const  playerWidth = document.querySelector('.player').clientWidth; 
 
-  document.querySelectorAll('.box').forEach( box =>{
+  const boxesCoordinates = Array.from(document.querySelectorAll('.box')).reduce((acc,box) =>{
     const {top ,left , width : boxWidth} = box.getBoundingClientRect();
+    const centerTop = calculateCenter(top,boxWidth,playerWidth) + "px";
+    const centerLeft = calculateCenter(left,boxWidth,playerWidth) + "px";
     const {homeBox,boxNum} = box.dataset;
+    const homeBoxesObj = acc.find(coordinatesObj => coordinatesObj.coordinatesName === 'homeBoxes');
+    const boxesObj = acc.find(coordinatesObj => coordinatesObj.coordinatesName === 'boxes');
     //if the box is a home box add the 
     //coordinates of the box in the home box object
-    //and vice versa
-    if(homeBox){
-      homeBoxesObj[`boxTop${boxNum}`] = `${calculateCenter(top,boxWidth,playerWidth)}px`;
-      homeBoxesObj[`boxLeft${boxNum}`] = `${calculateCenter(left,boxWidth,playerWidth)}px`;
+    //if it exists and vice versa.
+    if(homeBox && homeBoxesObj){ 
+      homeBoxesObj[`boxTop${boxNum}`] = centerTop;
+      homeBoxesObj[`boxLeft${boxNum}`] = centerLeft;
       homeBoxesObj[`boxEl${boxNum}`] = box;
       homeBoxesObj[`boxHomeName${boxNum}`]  = box.classList[1];
-    }else{
-      boxesObj[`boxTop${boxNum}`] = `${calculateCenter(top,boxWidth,playerWidth)}px`;
-      boxesObj[`boxLeft${boxNum}`] = `${calculateCenter(left,boxWidth,playerWidth)}px`;
+    }else if(homeBox){
+      acc.push({coordinatesName : 'homeBoxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft});
+    }else if(boxesObj){
+      boxesObj[`boxTop${boxNum}`] =centerTop;
+      boxesObj[`boxLeft${boxNum}`] = centerLeft;
       boxesObj[`boxEl${boxNum}`] = box;
-    }   
-  });
+    }else{
+      acc.push({coordinatesName : 'boxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft});   
+    }
+
+    return acc;
+  },[]);
   //add both objects in the coordinates array
-  coordinatesArray.push(boxesObj,homeBoxesObj);
+  coordinatesArray.push(...boxesCoordinates);
 }
 class RollBtn{
   #rollBtnEl;
@@ -145,7 +156,10 @@ setBoxesCoordinates();
 document.querySelector('[data-roll-turn="1"]').classList.add('point');
 
 window.addEventListener('resize',()=>{
+  //empty the coordinates array before adding new data
+  coordinatesArray.splice(0,coordinatesArray.length)
   handlePlayersDefaultPosition();
+  setBoxesCoordinates();
 });
 
 document.querySelectorAll('.roll-btn').forEach(rollBtn => { new RollBtn(rollBtn) });

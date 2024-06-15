@@ -65,13 +65,13 @@ function setBoxesCoordinates(){
       homeBoxesObj[`boxEl${boxNum}`] = box;
       homeBoxesObj[`boxHomeName${boxNum}`]  = box.classList[1];
     }else if(homeBox){
-      acc.push({coordinatesName : 'homeBoxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft});
+      acc.push({coordinatesName : 'homeBoxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft , 'boxEl1'  : box, 'boxHomeName1': box.classList[1]});
     }else if(boxesObj){
       boxesObj[`boxTop${boxNum}`] =centerTop;
       boxesObj[`boxLeft${boxNum}`] = centerLeft;
       boxesObj[`boxEl${boxNum}`] = box;
     }else{
-      acc.push({coordinatesName : 'boxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft});   
+      acc.push({coordinatesName : 'boxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft , 'boxEl1' : box});   
     }
 
     return acc;

@@ -1,32 +1,21 @@
-const coordinatesArray = [];
+const coordinatesData = new Map();
 
 function handlePlayersDefaultPosition(){
   const playerElWidth = document.querySelector('.player').clientWidth;
   //set the co-ordinates of each jail container.
   //use its class to  create an object ie(for the class red you would create red-jails obj e.t.c),
   //and use its jailNum attr to determine its left top number(ie:left1,top1...);
-  const jailsCoordinates = Array.from(document.querySelectorAll('.player-container')).reduce((acc,playerContainerEl)=>{
-    const {left,top,width : playerContainerWidth}  = playerContainerEl.getBoundingClientRect();
+  const jailEls = Array.from(document.querySelectorAll('.player-container'));
+
+  jailEls.forEach(jailEl => {
+    const {left,top,width : playerContainerWidth}  = jailEl.getBoundingClientRect();
     const centerTop = calculateCenter(top,playerContainerWidth,playerElWidth) + 'px';
     const centerLeft = calculateCenter(left,playerContainerWidth,playerElWidth) + 'px';
+    const {jailNum} = jailEl.dataset;
+    const jailCoordinateName = jailEl.classList[1] + '-jails';
 
-    const {jailNum} = playerContainerEl.dataset;
-    const jailCoordinateName = playerContainerEl.classList[1] + '-jails';
-    const coordinatesObject = acc.find(coordinatesObj => coordinatesObj.coordinatesName === jailCoordinateName);
-    //the object exists already then add new values of the respective jail
-    //if not then add the respective jail object with first values
-    if(coordinatesObject){
-      coordinatesObject[`left${jailNum}`] = centerLeft ; 
-      coordinatesObject[`top${jailNum}`] = centerTop ; 
-    }else{
-      acc.push({'coordinatesName' : jailCoordinateName, 'top1' : centerTop , 'left1' : centerLeft});
-    }
-    return acc;
-  },[]);
-
-  //add the jails coordinates objects in coordinatesArray
-  coordinatesArray.push(...jailsCoordinates);
-
+    addToCoordinatesData(jailCoordinateName,`top${jailNum}`,`left${jailNum}`,centerTop,centerLeft);
+  });
 
   //to get the co-ordinates of players respecitve jail access the object using 
   //the players class name.
@@ -36,7 +25,7 @@ function handlePlayersDefaultPosition(){
   document.querySelectorAll('.player').forEach((playerEl)=>{
     const playerName = playerEl.classList[1] + '-jails';
     const {playerNum} = playerEl.dataset;
-    const coordinatesObject = coordinatesArray.find(coordinatesObj => coordinatesObj.coordinatesName === playerName);
+    const coordinatesObject = coordinatesData.get(playerName);
 
     const left = coordinatesObject[`left${playerNum}`];
     const top = coordinatesObject[`top${playerNum}`];
@@ -49,35 +38,27 @@ function handlePlayersDefaultPosition(){
 function setBoxesCoordinates(){
   const  playerWidth = document.querySelector('.player').clientWidth; 
 
-  const boxesCoordinates = Array.from(document.querySelectorAll('.box')).reduce((acc,box) =>{
+  const boxesEls = Array.from(document.querySelectorAll('.box'));
+  
+  boxesEls.forEach(box =>{
+    const {homeBox,boxNum} = box.dataset;
     const {top ,left , width : boxWidth} = box.getBoundingClientRect();
     const centerTop = calculateCenter(top,boxWidth,playerWidth) + "px";
     const centerLeft = calculateCenter(left,boxWidth,playerWidth) + "px";
-    const {homeBox,boxNum} = box.dataset;
-    const homeBoxesObj = acc.find(coordinatesObj => coordinatesObj.coordinatesName === 'homeBoxes');
-    const boxesObj = acc.find(coordinatesObj => coordinatesObj.coordinatesName === 'boxes');
-    //if the box is a home box add the 
-    //coordinates of the box in the home box object
-    //if it exists and vice versa.
-    if(homeBox && homeBoxesObj){ 
-      homeBoxesObj[`boxTop${boxNum}`] = centerTop;
-      homeBoxesObj[`boxLeft${boxNum}`] = centerLeft;
-      homeBoxesObj[`boxEl${boxNum}`] = box;
-      homeBoxesObj[`boxHomeName${boxNum}`]  = box.classList[1];
-    }else if(homeBox){
-      acc.push({coordinatesName : 'homeBoxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft , 'boxEl1'  : box, 'boxHomeName1': box.classList[1]});
-    }else if(boxesObj){
-      boxesObj[`boxTop${boxNum}`] =centerTop;
-      boxesObj[`boxLeft${boxNum}`] = centerLeft;
-      boxesObj[`boxEl${boxNum}`] = box;
-    }else{
-      acc.push({coordinatesName : 'boxes' , 'boxTop1' :centerTop , 'boxLeft1' : centerLeft , 'boxEl1' : box});   
-    }
+    addToCoordinatesData(homeBox ? 'homeBoxes' : 'boxes',`boxesTop${boxNum}`,`boxesLeft${boxNum}`,
+    centerTop,centerLeft);
+  });
+}
 
-    return acc;
-  },[]);
-  //add both objects in the coordinates array
-  coordinatesArray.push(...boxesCoordinates);
+function addToCoordinatesData(type,topKey,leftKey,topValue,leftValue){
+  if(!coordinatesData.has(type)){
+    coordinatesData.set(type , {coordinatesName : type});
+  }
+
+  const getTypeObj = coordinatesData.get(type);
+
+  getTypeObj[`${topKey}`] = topValue;
+  getTypeObj[`${leftKey}`] = leftValue;
 }
 class RollBtn{
   #rollBtnEl;
@@ -156,8 +137,6 @@ setBoxesCoordinates();
 document.querySelector('[data-roll-turn="1"]').classList.add('point');
 
 window.addEventListener('resize',()=>{
-  //empty the coordinates array before adding new data
-  coordinatesArray.splice(0,coordinatesArray.length)
   handlePlayersDefaultPosition();
   setBoxesCoordinates();
 });

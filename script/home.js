@@ -45,9 +45,4 @@ function handlePlayGame(){
 
 new playGameEvent(playGameBtn);
 
-document.querySelectorAll('.check-container').forEach(checkEl => {
-  checkEl.addEventListener('click',()=>{
-    checkEl.classList.add('check');
-  });
-});
 

@@ -3,6 +3,20 @@ import { gameJSCode } from './game.js';
 
 const gamePageEl = document.querySelector('.game-page');
 
+function saveAcivePlayersInfo(){
+  const activePlayers = Array.from(document.querySelectorAll('.check-container.check')).map(activePlayer => {
+    return {
+        home : activePlayer.classList[1],
+        name : activePlayer.nextElementSibling.value,
+        image : './images/user-image.jpeg'
+    };
+  });
+
+  localStorage.setItem('activePlayers',JSON.stringify(activePlayers));
+  //after saving the acive players info  show the game page and run its js code 
+  gameJSCode();
+}
+
 gamePageEl.style.setProperty("--screen-width", window.innerWidth + "px");
 window.addEventListener('resize', ()=> {
   if(!gamePageEl.classList.contains('show')){
@@ -38,17 +52,3 @@ document.querySelector('.play-btn').addEventListener('click',()=>{
 document.querySelector('.message-btn').addEventListener('click',()=>{
   document.querySelector('dialog').close();
 });
-
-function saveAcivePlayersInfo(){
-  const activePlayers = Array.from(document.querySelectorAll('.check-container.check')).map(activePlayer => {
-    return {
-        home : activePlayer.classList[1],
-        name : activePlayer.nextElementSibling.value,
-        image : './images/user-image.jpeg'
-    };
-  });
-
-  localStorage.setItem('activePlayers',JSON.stringify(activePlayers));
-  //after saving the acive players info  show the game page and run its js code 
-  gameJSCode();
-}

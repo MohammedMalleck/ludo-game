@@ -249,7 +249,6 @@ li{
   cursor: pointer;
   transition: filter 0.15s ease ,left 0.15s ease , top 0.15s ease;
   display:flex;
-  z-index: 4;
 
   &:hover{
     filter: brightness(95%);
@@ -274,7 +273,8 @@ li{
   justify-content: center;
   gap: .5rem;
   color: white;
-  padding: 1rem 2.5rem;
+  padding: 1rem .5rem;
+  width: 10.2rem;
   border-radius: 1rem;
   box-shadow: var(--box-shadow);
 
@@ -334,6 +334,7 @@ li{
   & img{
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 }
 .user-name{
@@ -392,6 +393,9 @@ li{
   .quit-game-btn{
     font-size: 1.6rem;
   }
+  .roll-container{
+    width: 9.9rem;
+  }
 }
 @media(max-width:850px){
   .site-name{
@@ -414,7 +418,8 @@ li{
     transform: scale(1.5);
   }
   .roll-container{
-    padding: .8rem 1.8rem;
+    padding: .8rem .5rem;
+    width:8.5rem;
 
     &::before{
       font-size: 2rem;
@@ -466,8 +471,9 @@ li{
     transform: scale(1.2);
   }
   .roll-container{
-    padding: .7rem 1rem;
+    padding: .7rem .5rem;
     gap: .25rem;
+    width: 5.2rem;
 
     &::before{
       font-size: 1.5rem;
@@ -521,9 +527,10 @@ li{
     transform: scale(1);
   }
   .roll-container{
-    padding: .5rem .7rem;
+    padding: .5rem .3rem;
     gap: .25rem;
     border-radius: .5rem;
+    width: 4.1rem;
 
     &::before{
       font-size:1rem;
@@ -577,7 +584,7 @@ li{
 }
 @media (max-width:370px){
   .roll-container{
-    padding: .3rem .7rem;
+    padding: .3rem .2rem;
     gap: .25rem;
 
     &.green{
@@ -594,15 +601,12 @@ li{
     }
   }
   .numbers{
-    font-size:1rem;
+    font-size:.8rem;
   }
   .roll-btn{
     width: 1.7rem;
     font-size:.5rem;
     border-width: 0.08rem;
-  }
-  .user-picture{
-    width: 1.2rem;
   }
   .user-name{
     font-size: .7rem;

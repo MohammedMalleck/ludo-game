@@ -132,7 +132,7 @@ main{
 
   & input{
     border: none;
-    padding: .5rem 0rem;
+    padding: .5rem;
     outline: none;
   }
 }
@@ -193,11 +193,12 @@ main{
 }
 /*upload button*/
 .upload-image-btn{
+  width: 9rem;
   background-color: white;
   border: none;
   height: 100%;
   border-radius: 100vw;
-  padding: 0rem 0.7rem;
+  padding: .5rem 0rem;
   font-size: 1.2rem;
   cursor: pointer;
   transition: filter 0.15s ease;
@@ -245,6 +246,13 @@ main{
   .play-game-btn,
   .view-btn{
     font-size: 1.6rem;
+  }
+  .upload-image-btn{
+    width: 8rem;
+    font-size: 1.05rem;
+  }
+  .players-selection-holder input{
+    font-size: 1.2rem;
   }
 }
 

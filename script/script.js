@@ -1,6 +1,5 @@
 import  './home.js';
 import { gameJSCode } from './game.js';
-
 const gamePageEl = document.querySelector('.game-page');
 
 function saveAcivePlayersInfo(){

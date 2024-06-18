@@ -140,6 +140,7 @@ export function gameJSCode(){
     playerEl.style.setProperty("--current-left", (playerElLeft - 50).toFixed(3) + "px");
     playerEl.style.setProperty("--board-player-top", scoreSvgCenterTop  + "px");
     playerEl.style.setProperty("--board-player-left", scoreSvgCenterLeft + "px");
+    playerEl.style.zIndex = '4';
     //add the class to enable animation
     playerEl.classList.add('done');
   }

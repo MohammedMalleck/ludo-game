@@ -5,16 +5,38 @@ const gamePageEl = document.querySelector('.game-page');
 
 function saveAcivePlayersInfo(){
   const activePlayers = Array.from(document.querySelectorAll('.check-container.check')).map(activePlayer => {
+    const {imgUrl} = activePlayer.nextElementSibling.nextElementSibling.dataset;
     return {
         home : activePlayer.classList[1],
         name : activePlayer.nextElementSibling.value,
-        image : './images/user-image.jpeg'
+        image : imgUrl || './images/user-image.jpeg'
     };
   });
 
   localStorage.setItem('activePlayers',JSON.stringify(activePlayers));
   //after saving the acive players info  show the game page and run its js code 
   gameJSCode();
+}
+
+function displayDialog(headingText,messageText,btnText){
+  document.querySelector('.message-heading').textContent = headingText;
+  document.querySelector('.message-text').textContent = messageText;
+  document.querySelector('.message-btn').textContent = btnText;
+  document.querySelector('dialog').showModal();
+}
+
+function getImgUrl(file){
+  //read the file and return the url
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(file);
+  return new Promise((resolve,reject) => {
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+    fileReader.onerror = () => {
+      reject(new Error('An Unexpected Error has occured kindly refresh the page'))
+    };
+  });
 }
 
 gamePageEl.style.setProperty("--screen-width", window.innerWidth + "px");
@@ -33,15 +55,9 @@ document.querySelectorAll('.check-container').forEach(checkEl => {
 
 document.querySelector('.play-btn').addEventListener('click',()=>{
   const activePlayers = document.querySelectorAll('.check-container.check').length;
-  const heading =  document.querySelector('.message-heading');
-  const errorText = document.querySelector('.message-text');
-  const okayBtn = document.querySelector('.message-btn');
   if(activePlayers < 2){
-   heading.textContent = 'Error';
-   errorText.textContent = 'Select at least any 2 players to play the game';
-   okayBtn.textContent = 'Okay';
-   document.querySelector('dialog').classList.add('error');
-   document.querySelector('dialog').showModal();
+    displayDialog('Error','Select at least any 2 players to play the game','Okay');
+    document.querySelector('dialog').classList.add('error');
   }else{
     saveAcivePlayersInfo();
     document.querySelector('.game-page').classList.add('show');
@@ -51,4 +67,29 @@ document.querySelector('.play-btn').addEventListener('click',()=>{
 
 document.querySelector('.message-btn').addEventListener('click',()=>{
   document.querySelector('dialog').close();
+});
+
+//open the image uploader tab on clicking
+//upload image btn 
+document.querySelectorAll('.upload-image-btn').forEach(uploadImgBtn => {
+  uploadImgBtn.addEventListener('click',()=>{
+    uploadImgBtn.nextElementSibling.click();
+  });
+});
+
+document.querySelectorAll('input[type="file"]').forEach(fileEl => {
+  fileEl.addEventListener('change',async(e)=>{
+    try{
+      const imgUrl = await getImgUrl(e.target.files[0]);
+      const uploadBtn = e.target.previousSibling.previousSibling;
+      uploadBtn.setAttribute('data-img-url' , imgUrl);
+      uploadBtn.textContent = 'Uploaded !';
+      //make sure to reset the input el values else the change
+      //event wont be triggerd on selecting the same file again
+      e.target.value = '';
+    }catch(error){
+      displayDialog('Error',error.message,'Okay');
+      document.querySelector('dialog').classList.add('error');
+    }
+   });
 });

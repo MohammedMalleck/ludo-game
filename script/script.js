@@ -5,9 +5,11 @@ const gamePageEl = document.querySelector('.game-page');
 function saveAcivePlayersInfo(){
   const activePlayers = Array.from(document.querySelectorAll('.check-container.check')).map(activePlayer => {
     const {imgUrl} = activePlayer.nextElementSibling.nextElementSibling.dataset;
+    //make the first character capital(ie :- yellow would become Yellow)
+    const defaultName = activePlayer.classList[1].replace(/^./,match => match.toUpperCase());
     return {
         home : activePlayer.classList[1],
-        name : activePlayer.nextElementSibling.value,
+        name : activePlayer.nextElementSibling.value === '' ? defaultName : activePlayer.nextElementSibling.value,
         image : imgUrl || './images/user-image.jpeg'
     };
   });

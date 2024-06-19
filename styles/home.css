@@ -86,15 +86,13 @@ main{
   &:hover{
     scale: 1.1;
   }
+}
+/*for touch devices*/
+.play-btn.expand{
+  scale: 1.1;
 
-  /*for touch devices*/
-
-  &.expand::after{
+  &::after{
     width: 110%;
-  }
-
-  &.expand{
-    scale: 1.1;
   }
 }
 /*players selection  styles*/
@@ -273,7 +271,7 @@ main{
   }
 }
 @keyframes checkAni {
-  100% {
+  to{
     transform: scale(1);
     stroke-dashoffset: 0;
   }

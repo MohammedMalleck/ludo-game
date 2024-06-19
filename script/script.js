@@ -1,6 +1,6 @@
 import  './home.js';
 import { gameJSCode } from './game.js';
-const gamePageEl = document.querySelector('.game-page');
+
 
 function saveAcivePlayersInfo(){
   const activePlayers = Array.from(document.querySelectorAll('.check-container.check')).map(activePlayer => {
@@ -40,8 +40,9 @@ function getImgUrl(file){
   });
 }
 
-gamePageEl.style.setProperty("--screen-width", window.innerWidth + "px");
+document.querySelector('.game-page').style.setProperty("--screen-width", window.innerWidth + "px");
 window.addEventListener('resize', ()=> {
+  const gamePageEl = document.querySelector('.game-page');
   if(!gamePageEl.classList.contains('show')){
     gamePageEl.style.setProperty("--screen-width", window.innerWidth + "px")
   }

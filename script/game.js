@@ -11,6 +11,7 @@ export function gameJSCode(){
           <div class="user-name">${activePlayer.name}</div>
           <div class="numbers">1</div>
           <button class="roll-btn">Roll</button>
+          <div class="roll-digits"></div>
         </div> 
     `).join('\n');
   }
@@ -79,7 +80,9 @@ export function gameJSCode(){
     #rollBtnEl;
     #intervalID;
     #digit;
-    #timeoutID;
+    //create a static variable that would be used to switch 
+    //pointer class
+    static _rollNum = 1;
 
     constructor(element){
       this.#rollBtnEl = element;
@@ -101,13 +104,11 @@ export function gameJSCode(){
         numberEl.innerHTML = number;
       },250);
 
-      this.#timeoutID = setTimeout(()=>{
+      setTimeout(()=>{
         clearInterval(this.#intervalID);
-        this.#intervalID = false;
-
         this.#rollBtnEl.previousSibling.previousSibling.innerHTML = this.#digit;
-
-        clearTimeout(this.#timeoutID);
+        this.#digit === 6 ? this.#rollBtnEl.parentElement.classList.add('point') : '';
+        this.#rollBtnEl.nextElementSibling.innerHTML += `<div>${this.#digit}</div>`;
       },2000);
     }
   }

@@ -363,6 +363,24 @@ li{
     filter: brightness(97%);
   }
 }
+.roll-digits{
+  position: absolute;
+  bottom: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  overflow-x: scroll;
+  cursor: default;
+
+   &::-webkit-scrollbar{
+    display: none;
+   }
+
+   & > div{
+      flex-shrink: none;
+   }
+}
 /*media queries*/
 @media(max-width:955px){
   :root{
@@ -380,6 +398,9 @@ li{
   }
   .numbers{
     font-size:1.8rem;
+  }
+  .roll-digits{
+    font-size: 1.4rem;
   }
   .roll-container::before{
     font-size: 2.5rem;
@@ -429,6 +450,9 @@ li{
   }
   .numbers{
     font-size:1.5rem;
+  }
+  .roll-digits{
+    font-size: 1.2rem;
   }
   .roll-btn{
     width: 4rem;
@@ -481,7 +505,8 @@ li{
       font-size: 1.5rem;
     }
   }
-  .numbers{
+  .numbers,
+  .roll-digits{
     font-size:1rem;
   }
   .roll-btn{
@@ -602,7 +627,8 @@ li{
       left: 105%;
     }
   }
-  .numbers{
+  .numbers,
+  .roll-digits{
     font-size:.8rem;
   }
   .roll-btn{

@@ -19,11 +19,12 @@ function saveAcivePlayersInfo(){
   gameJSCode();
 }
 
-function displayDialog(headingText,messageText,btnText){
+export function displayDialog(headingText,messageText,btnText,className){
   document.querySelector('.message-heading').textContent = headingText;
   document.querySelector('.message-text').textContent = messageText;
   document.querySelector('.message-btn').textContent = btnText;
   document.querySelector('dialog').showModal();
+  document.querySelector('dialog').classList.add(className);
 }
 
 function getImgUrl(file){
@@ -58,8 +59,7 @@ document.querySelectorAll('.check-container').forEach(checkEl => {
 document.querySelector('.play-btn').addEventListener('click',()=>{
   const activePlayers = document.querySelectorAll('.check-container.check').length;
   if(activePlayers < 2){
-    displayDialog('Error','Select at least any 2 players to play the game','Okay');
-    document.querySelector('dialog').classList.add('error');
+    displayDialog('Error','Select at least any 2 players to play the game','Okay','error');
   }else{
     saveAcivePlayersInfo();
     document.querySelector('.game-page').classList.add('show');

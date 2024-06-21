@@ -1,3 +1,5 @@
+import { displayDialog } from "./script.js";
+
 export function gameJSCode(){
   const coordinatesData = new Map();
   const activePlayers = JSON.parse(localStorage.getItem('activePlayers'));
@@ -11,7 +13,7 @@ export function gameJSCode(){
           <div class="user-name">${activePlayer.name}</div>
           <div class="numbers">1</div>
           <button class="roll-btn">Roll</button>
-          <div class="roll-digits"></div>
+          <div data-digit-home="${activePlayer.home}" class="roll-digits"></div>
         </div> 
     `).join('\n');
   }
@@ -148,6 +150,13 @@ export function gameJSCode(){
   function calculateCenter(offsetValue,containerWidth,playerWidth){
     return (offsetValue + (containerWidth/2) - (playerWidth/2)).toFixed(3);
   }
+  function findTheCurrentPlayer(){
+    return [...document.querySelectorAll('.roll-digits')].map(rollDigitEl => {
+      if(rollDigitEl.innerHTML !== ''){
+       return rollDigitEl.dataset.digitHome;
+      };
+    }).join('');
+  };
 
   renderRollsHTML();
   handlePlayersDefaultPosition();
@@ -160,6 +169,21 @@ export function gameJSCode(){
   });
 
   document.querySelectorAll('.roll-btn').forEach(rollBtn => { new RollBtn(rollBtn) });
+
+  document.querySelectorAll('.player').forEach(playerEl => {
+    playerEl.addEventListener('click',()=>{
+      //always make sure that no roller has point class 
+      if(!document.querySelector('.roll-container.point')){
+        //if the clicked player has different home name as the current player
+        //then tell the user which player to click
+        const home = playerEl.classList[1];
+        const currentPlayer = findTheCurrentPlayer();
+        if(home !== currentPlayer && currentPlayer){
+          displayDialog('Note',`Its currently the turn of the ${currentPlayer} player`,'Okay','error');
+        };
+      };
+    });
+  });
 
   document.querySelectorAll('.player.done').forEach( playerEl => {
     playerEl.addEventListener('animationend',()=>{

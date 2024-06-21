@@ -358,6 +358,7 @@ li{
   cursor: pointer;
   transition: filter 0.15s ease;
   box-shadow: 0rem 0rem 1rem rgba(0,0,0,0.5);
+  outline: none;
 
   &:hover{
     filter: brightness(97%);

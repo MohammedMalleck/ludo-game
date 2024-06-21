@@ -152,10 +152,10 @@ export function gameJSCode(){
   }
   function findTheCurrentPlayer(){
     return [...document.querySelectorAll('.roll-digits')].map(rollDigitEl => {
-      if(rollDigitEl.innerHTML !== ''){
-       return rollDigitEl.dataset.digitHome;
+      if(rollDigitEl.innerText !== ''){
+       return {home : rollDigitEl.dataset.digitHome , text : rollDigitEl.innerText};
       };
-    }).join('');
+    }).filter(Boolean)[0];
   };
 
   renderRollsHTML();
@@ -172,14 +172,18 @@ export function gameJSCode(){
 
   document.querySelectorAll('.player').forEach(playerEl => {
     playerEl.addEventListener('click',()=>{
+      const currentPlayer = findTheCurrentPlayer();
       //always make sure that no roller has point class 
-      if(!document.querySelector('.roll-container.point')){
-        //if the clicked player has different home name as the current player
-        //then tell the user which player to click
+      //and we have a value(s) to move a player
+      if(!document.querySelector('.roll-container.point') && currentPlayer){
         const home = playerEl.classList[1];
-        const currentPlayer = findTheCurrentPlayer();
-        if(home !== currentPlayer && currentPlayer){
-          displayDialog('Note',`Its currently the turn of the ${currentPlayer} player`,'Okay','error');
+        //if the clicked player matches the current player & is in jail and has the value to be moved out 
+        //then free it
+        if(home === currentPlayer.home && !playerEl.dataset.playerOut && currentPlayer.text.includes('6')){
+          console.log('free the player')
+        }else if(home !== currentPlayer.home ){
+          //if the clicked player does not match the current player then point to the current player
+          displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'Okay','error');
         };
       };
     });

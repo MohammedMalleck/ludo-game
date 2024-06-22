@@ -82,6 +82,7 @@ export function gameJSCode(){
     #rollBtnEl;
     #intervalID;
     #digit;
+    #freePlayers;
     //create a static variable that would be used to switch 
     //pointer class
     static _rollNum = 1;
@@ -95,6 +96,9 @@ export function gameJSCode(){
           rollContainerEl.classList.remove('point');
           this.#handleRolling();
           this.#digit = Math.floor(Math.random() * 6) + 1;
+          //access the number of free players of the respecitve class
+          const home = rollContainerEl.classList[1];
+          this.#freePlayers = [...document.querySelectorAll(`.player.${home}`)].filter(playerEl => playerEl.dataset.playerOut).length;
         };
       });
     }
@@ -109,8 +113,23 @@ export function gameJSCode(){
       setTimeout(()=>{
         clearInterval(this.#intervalID);
         this.#rollBtnEl.previousSibling.previousSibling.innerHTML = this.#digit;
-        this.#digit === 6 ? this.#rollBtnEl.parentElement.classList.add('point') : '';
-        this.#rollBtnEl.nextElementSibling.innerHTML += `<div>${this.#digit}</div>`;
+        const rollDigitEl = this.#rollBtnEl.nextElementSibling;
+        rollDigitEl.setAttribute('data-has-a-value',true);
+        rollDigitEl.innerHTML += `<div>${this.#digit}</div>`;
+        if(this.#digit === 6){
+          //on re-adding point class remove setAttribute since its rolling again 
+          rollDigitEl.removeAttribute('data-has-a-value');
+          this.#rollBtnEl.parentElement.classList.add('point');
+          //if the digit is not 6 and there is no free players of the respective home
+          //as well as no other values other then this digit then it means the user 
+          //has no player to move , hence hide the digits and move on to the next player
+        }else if(!this.#freePlayers && rollDigitEl.innerText.length < 2){
+          //on re-adding point class remove setAttribute since its rolling again 
+          rollDigitEl.removeAttribute('data-has-a-value');
+          rollDigitEl.innerHTML = '';
+          const rollElNum =  RollBtn._rollNum < document.querySelectorAll('.roll-container').length ?  ++RollBtn._rollNum : RollBtn._rollNum = 1;
+          document.querySelector(`[data-roll-turn="${rollElNum}"]`).classList.add('point');
+        }
       },2000);
     }
   }
@@ -152,7 +171,7 @@ export function gameJSCode(){
   }
   function findTheCurrentPlayer(){
     return [...document.querySelectorAll('.roll-digits')].map(rollDigitEl => {
-      if(rollDigitEl.innerText !== ''){
+      if(rollDigitEl.dataset.hasAValue){
        return {home : rollDigitEl.dataset.digitHome , text : rollDigitEl.innerText};
       };
     }).filter(Boolean)[0];
@@ -174,12 +193,12 @@ export function gameJSCode(){
     playerEl.addEventListener('click',()=>{
       const currentPlayer = findTheCurrentPlayer();
       //always make sure that no roller has point class 
-      //and we have a value(s) to move a player
-      if(!document.querySelector('.roll-container.point') && currentPlayer){
+      //and we have a roller who has been a value
+      if(!document.querySelector('.roll-container.point') &&  currentPlayer){
         const home = playerEl.classList[1];
         //if the clicked player matches the current player & is in jail and has the value to be moved out 
         //then free it
-        if(home === currentPlayer.home && !playerEl.dataset.playerOut && currentPlayer.text.includes('6')){
+        if(home === currentPlayer.home && !playerEl.dataset.playerOut && currentPlayer.text.length > 1){
           console.log('free the player')
         }else if(home !== currentPlayer.home ){
           //if the clicked player does not match the current player then point to the current player

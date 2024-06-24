@@ -41,15 +41,21 @@ export function gameJSCode(){
     //ie(if player class is  red and num attr  1 then you would access red-jails object and properties
     //top1,left1);
     document.querySelectorAll('.player').forEach((playerEl)=>{
-      const playerName = playerEl.classList[1] + '-jails';
-      const {playerNum} = playerEl.dataset;
-      const coordinatesObject = coordinatesData.get(playerName);
+      if(!playerEl.dataset.playerOut){
+        const playerName = playerEl.classList[1] + '-jails';
+        const {playerNum} = playerEl.dataset;
+        const coordinatesObject = coordinatesData.get(playerName);
 
-      const left = coordinatesObject[`left${playerNum}`];
-      const top = coordinatesObject[`top${playerNum}`];
+        const left = coordinatesObject[`left${playerNum}`];
+        const top = coordinatesObject[`top${playerNum}`];
 
-      playerEl.style.left = left;
-      playerEl.style.top = top;
+        playerEl.style.left = left;
+        playerEl.style.top = top;
+      }else{
+        //if the player is freed from jail then dont move it back to jail
+        //but the box it currently is in
+        moveToCurrentBox(playerEl)
+      };
     });
   };
 
@@ -63,14 +69,14 @@ export function gameJSCode(){
       const {top ,left , width : boxWidth} = box.getBoundingClientRect();
       const centerTop = calculateCenter(top,boxWidth,playerWidth) + "px";
       const centerLeft = calculateCenter(left,boxWidth,playerWidth) + "px";
-      addToCoordinatesData(homeBox ? 'homeBoxes' : 'boxes',`boxesTop${boxNum}`,`boxesLeft${boxNum}`,
-      centerTop,centerLeft,startBox ? `startbox${startBox}` : undefined,boxNum);
+      addToCoordinatesData('boxes',`boxesTop${boxNum}`,`boxesLeft${boxNum}`,
+      centerTop,centerLeft,startBox ? `startbox${startBox}` : undefined,boxNum,homeBox ? `homeBox${boxNum}`: undefined);
     });
   }
 
-  function addToCoordinatesData(type,topKey,leftKey,topValue,leftValue,startBoxKey,startBoxValue){
+  function addToCoordinatesData(type,topKey,leftKey,topValue,leftValue,startBoxKey,startBoxValue,homeBoxKey){
     if(!coordinatesData.has(type)){
-      coordinatesData.set(type , {coordinatesName : type});
+      coordinatesData.set(type , {coordinatesType : type});
     }
 
     const getTypeObj = coordinatesData.get(type);
@@ -80,6 +86,7 @@ export function gameJSCode(){
     //if the box is a start box(ie : a box where the player moves after being released) of any of the homes
     //then give this object a startBox property(the key value pair would be for eg:- startboxgreen : 1)
     startBoxKey ? getTypeObj[`${startBoxKey}`] = startBoxValue : '';
+    homeBoxKey ? getTypeObj[`${homeBoxKey}`] = true : '';
   }
   class RollBtn{
     #rollBtnEl;
@@ -147,7 +154,7 @@ export function gameJSCode(){
     });
   }
 
-  function movePlayerToBoard(playerEl){
+  function moveToBoard(playerEl){
     //player color('yellow,red'e.t.c)
     const home = playerEl.classList[1];
     //get the players rect values
@@ -182,16 +189,23 @@ export function gameJSCode(){
   function moveToFirstBox(playerEl){
     const home = playerEl.classList[1];
     const digitEl = document.querySelector(`[data-digit-home="${home}"]`);
-    //using the respective home value
-    //get the boxNum of the start box 
-    const boxNum = coordinatesData.values().find(coordinateObj => coordinateObj[`startbox${home}`])[`startbox${home}`];
+    const boxNum = coordinatesData.get('boxes')[`startbox${home}`];
     //get the top and left value using the boxNum
-    const top = coordinatesData.values().find(coordinateObj => coordinateObj[`boxesTop${boxNum}`])[`boxesTop${boxNum}`];
-    const left = coordinatesData.values().find(coordinateObj => coordinateObj[`boxesLeft${boxNum}`])[`boxesLeft${boxNum}`];
+    const top = coordinatesData.get('boxes')[`boxesTop${boxNum}`];
+    const left = coordinatesData.get('boxes')[`boxesLeft${boxNum}`];
     playerEl.style = `top:${top}; left:${left};`;
-    playerEl.setAttribute('data-player-out',true);
+    //safe the player current box number in player out attribute
+    playerEl.setAttribute('data-player-out',boxNum);
     //remove the first value from the respective digit(which would be 6)
     digitEl.innerHTML = digitEl.innerText.slice(1);
+  };
+
+  function moveToCurrentBox(playerEl){
+    const currentBoxNum = playerEl.dataset.playerOut;
+    const top = coordinatesData.get('boxes')[`boxesTop${currentBoxNum}`];
+    const left = coordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
+    playerEl.style.top = top;
+    playerEl.style.left = left;
   };
 
 
@@ -202,8 +216,8 @@ export function gameJSCode(){
   document.querySelector('[data-roll-turn="1"]').classList.add('point');
 
   window.addEventListener('resize',()=>{
-    handlePlayersDefaultPosition();
     setBoxesCoordinates();
+    handlePlayersDefaultPosition();
   });
 
   document.querySelectorAll('.roll-btn').forEach(rollBtn => { new RollBtn(rollBtn) });
@@ -211,9 +225,7 @@ export function gameJSCode(){
   document.querySelectorAll('.player').forEach(playerEl => {
     playerEl.addEventListener('click',()=>{
       const currentPlayer = findTheCurrentPlayer();
-      //always make sure that no roller has point class 
-      //and we have a roller who has been a value
-      if(!document.querySelector('.roll-container.point') &&  currentPlayer){
+      if(currentPlayer){
         const home = playerEl.classList[1];
         //if the clicked player matches the current player & is in jail and has the value to be moved out 
         //then free it

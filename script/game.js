@@ -32,7 +32,7 @@ export function gameJSCode(){
       const {jailNum} = jailEl.dataset;
       const jailCoordinateName = jailEl.classList[1] + '-jails';
 
-      addToCoordinatesData(jailCoordinateName,`top${jailNum}`,`left${jailNum}`,centerTop,centerLeft);
+      addToCoordinatesData(jailCoordinateName,`top${jailNum}`,`left${jailNum}`,centerTop,centerLeft,undefined);
     });
 
     //to get the co-ordinates of players respecitve jail access the object using 
@@ -59,16 +59,16 @@ export function gameJSCode(){
     const boxesEls = Array.from(document.querySelectorAll('.box'));
     
     boxesEls.forEach(box =>{
-      const {homeBox,boxNum} = box.dataset;
+      const {homeBox,boxNum,startBox} = box.dataset;
       const {top ,left , width : boxWidth} = box.getBoundingClientRect();
       const centerTop = calculateCenter(top,boxWidth,playerWidth) + "px";
       const centerLeft = calculateCenter(left,boxWidth,playerWidth) + "px";
       addToCoordinatesData(homeBox ? 'homeBoxes' : 'boxes',`boxesTop${boxNum}`,`boxesLeft${boxNum}`,
-      centerTop,centerLeft);
+      centerTop,centerLeft,startBox ? `startbox${startBox}` : undefined,boxNum);
     });
   }
 
-  function addToCoordinatesData(type,topKey,leftKey,topValue,leftValue){
+  function addToCoordinatesData(type,topKey,leftKey,topValue,leftValue,startBoxKey,startBoxValue){
     if(!coordinatesData.has(type)){
       coordinatesData.set(type , {coordinatesName : type});
     }
@@ -77,6 +77,9 @@ export function gameJSCode(){
 
     getTypeObj[`${topKey}`] = topValue;
     getTypeObj[`${leftKey}`] = leftValue;
+    //if the box is a start box(ie : a box where the player moves after being released) of any of the homes
+    //then give this object a startBox property(the key value pair would be for eg:- startboxgreen : 1)
+    startBoxKey ? getTypeObj[`${startBoxKey}`] = startBoxValue : '';
   }
   class RollBtn{
     #rollBtnEl;
@@ -176,6 +179,22 @@ export function gameJSCode(){
       };
     }).filter(Boolean)[0];
   };
+  function moveToFirstBox(playerEl){
+    const home = playerEl.classList[1];
+    const digitEl = document.querySelector(`[data-digit-home="${home}"]`);
+    //using the respective home value
+    //get the boxNum of the start box 
+    const boxNum = coordinatesData.values().find(coordinateObj => coordinateObj[`startbox${home}`])[`startbox${home}`];
+    //get the top and left value using the boxNum
+    const top = coordinatesData.values().find(coordinateObj => coordinateObj[`boxesTop${boxNum}`])[`boxesTop${boxNum}`];
+    const left = coordinatesData.values().find(coordinateObj => coordinateObj[`boxesLeft${boxNum}`])[`boxesLeft${boxNum}`];
+    playerEl.style = `top:${top}; left:${left};`;
+    playerEl.setAttribute('data-player-out',true);
+    //remove the first value from the respective digit(which would be 6)
+    digitEl.innerHTML = digitEl.innerText.slice(1);
+  };
+
+
 
   renderRollsHTML();
   handlePlayersDefaultPosition();
@@ -199,7 +218,7 @@ export function gameJSCode(){
         //if the clicked player matches the current player & is in jail and has the value to be moved out 
         //then free it
         if(home === currentPlayer.home && !playerEl.dataset.playerOut && currentPlayer.text.length > 1){
-          console.log('free the player')
+          moveToFirstBox(playerEl);
         }else if(home !== currentPlayer.home ){
           //if the clicked player does not match the current player then point to the current player
           displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'Okay','error');

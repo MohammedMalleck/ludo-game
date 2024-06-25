@@ -3,6 +3,7 @@ import { displayDialog } from "./script.js";
 export function gameJSCode(){
   const coordinatesData = new Map();
   const activePlayers = JSON.parse(localStorage.getItem('activePlayers'));
+  let quitBtnClicked;
 
   function renderRollsHTML(){
     document.querySelector('.ludo-container').innerHTML += activePlayers.map((activePlayer,index) => `
@@ -250,6 +251,13 @@ export function gameJSCode(){
   //display the default browser pop when the user 
   //refreshes the game page
   window.addEventListener('beforeunload',(event)=>{
-   event.preventDefault();
+    if(!quitBtnClicked){
+      event.preventDefault();
+    }
+  });
+
+  document.querySelector('.quit-game-btn').addEventListener('click',()=>{
+    quitBtnClicked = true;
+    window.location.reload();
   });
 }

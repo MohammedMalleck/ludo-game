@@ -247,4 +247,9 @@ export function gameJSCode(){
       playerEl.style.display = 'none';
     });
   });
+  //display the default browser pop when the user 
+  //refreshes the game page
+  window.addEventListener('beforeunload',(event)=>{
+   event.preventDefault();
+  });
 }

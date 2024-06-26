@@ -199,6 +199,7 @@ export function gameJSCode(){
     playerEl.setAttribute('data-player-out',boxNum);
     //remove the first value from the respective digit(which would be 6)
     digitEl.innerHTML = digitEl.innerText.slice(1);
+    reArrange(boxNum);
   };
 
   function moveToCurrentBox(playerEl){
@@ -207,6 +208,21 @@ export function gameJSCode(){
     const left = coordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
     playerEl.style.top = top;
     playerEl.style.left = left;
+    reArrange(currentBoxNum)
+  };
+
+  function reArrange(boxNum){
+    const {top:boxTop,left:boxLeft , width : boxWidth} = document.querySelector(`[data-box-num="${boxNum}"]`).getBoundingClientRect();
+    const newWidth = (boxWidth / 3);
+    const matchedPlayers = document.querySelectorAll(`[data-player-out="${boxNum}"]`);
+    if(matchedPlayers.length > 1){
+      matchedPlayers.forEach((playerEl,index)=>{
+        playerEl.style.width = newWidth + 'px';
+        playerEl.style.height = newWidth + 'px';
+        playerEl.style.top = boxTop + (newWidth * Math.floor(index/3)) + 'px';
+        playerEl.style.left = boxLeft + (newWidth * (index % 3)) + 'px';
+      });
+    };
   };
 
 

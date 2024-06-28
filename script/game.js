@@ -14,7 +14,7 @@ export function gameJSCode(){
           <div class="user-name">${activePlayer.name}</div>
           <div class="numbers">1</div>
           <button class="roll-btn">Roll</button>
-          <div data-digit-home="${activePlayer.home}" class="roll-digits"></div>
+          <div data-home-name="${activePlayer.home}" class="roll-digits"></div>
         </div> 
     `).join('\n');
   }
@@ -183,13 +183,13 @@ export function gameJSCode(){
   function findTheCurrentPlayer(){
     return [...document.querySelectorAll('.roll-digits')].map(rollDigitEl => {
       if(rollDigitEl.dataset.hasAValue){
-       return {home : rollDigitEl.dataset.digitHome , text : rollDigitEl.innerText};
+       return {home : rollDigitEl.dataset.homeName , text : rollDigitEl.innerText};
       };
     }).filter(Boolean)[0];
   };
   function moveToFirstBox(playerEl){
     const home = playerEl.classList[1];
-    const digitEl = document.querySelector(`[data-digit-home="${home}"]`);
+    const digitEl = document.querySelector(`[data-home-name="${home}"]`);
     const boxNum = coordinatesData.get('boxes')[`startbox${home}`];
     //get the top and left value using the boxNum
     const top = coordinatesData.get('boxes')[`boxesTop${boxNum}`];

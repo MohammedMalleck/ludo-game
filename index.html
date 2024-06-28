@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles/general.css">
   <link rel="stylesheet" href="styles/home.css">
   <link rel="stylesheet" href="styles/game.css">
-  <link rel="stylesheet" href="styles/message.css">
+  <link rel="stylesheet" href="styles/dialog.css">
 </head>
 <body>
   <main>
@@ -849,10 +849,15 @@
 
     <!-- message dialog  -->
     <dialog>
-      <div class="message-container">
-        <h2 class="message-heading"></h2>
-        <div class="message-text"></div>
-        <button class="message-btn"></button>
+      <div class="dialog-container">
+        <h2 class="dialog-heading"></h2>
+        <div class="dialog-note"></div>
+        <div class="dialog-btn-container">
+          <button class="dialog-btn no">No</button>
+          <button class="dialog-btn yes">Yes</button>
+          <button class="dialog-btn okay">Okay</button>
+          <button class="dialog-btn play-again">Play Again</button>
+        </div>
       </div>
     </dialog>
 

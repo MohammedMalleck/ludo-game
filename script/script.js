@@ -19,12 +19,24 @@ function saveAcivePlayersInfo(){
   gameJSCode();
 }
 
-export function displayDialog(headingText,messageText,btnText,className){
-  document.querySelector('.message-heading').textContent = headingText;
-  document.querySelector('.message-text').textContent = messageText;
-  document.querySelector('.message-btn').textContent = btnText;
-  document.querySelector('dialog').showModal();
-  document.querySelector('dialog').classList.add(className);
+export function displayDialog(heading,note,type){
+  const dialogEl = document.querySelector('dialog');
+  const dialogBtnContainer = document.querySelector('.dialog-btn-container');
+  document.querySelector('.dialog-heading').textContent = heading;
+  document.querySelector('.dialog-note').textContent = note;
+
+  //remove an note/quit-game class from 
+  //dialog btn container before adding any class
+  if(dialogBtnContainer.classList[1]){
+    dialogBtnContainer.classList.remove(dialogBtnContainer.classList[1]);
+  };
+
+  dialogEl.showModal();
+  //remove error class from dialog el before adding either error or success
+  /*Note :- success class is not removed since after adding success class the page would re-load hence removing it*/
+  dialogEl.classList.remove('error');
+  type === 'play-again' ? dialogEl.classList.add('success') : dialogEl.classList.add('error');
+  dialogBtnContainer.classList.add(type);
 }
 
 function getImgUrl(file){
@@ -59,7 +71,7 @@ document.querySelectorAll('.check-container').forEach(checkEl => {
 document.querySelector('.play-btn').addEventListener('click',()=>{
   const activePlayers = document.querySelectorAll('.check-container.check').length;
   if(activePlayers < 2){
-    displayDialog('Error','Select at least any 2 players to play the game','Okay','error');
+    displayDialog('Error','Select at least any 2 players to play the game','note');
   }else{
     saveAcivePlayersInfo();
     document.querySelector('.game-page').classList.add('show');
@@ -67,7 +79,7 @@ document.querySelector('.play-btn').addEventListener('click',()=>{
 
 });
 
-document.querySelector('.message-btn').addEventListener('click',()=>{
+document.querySelector('.dialog-btn.okay').addEventListener('click',()=>{
   document.querySelector('dialog').close();
 });
 
@@ -90,8 +102,7 @@ document.querySelectorAll('input[type="file"]').forEach(fileEl => {
       //event wont be triggerd on selecting the same file again
       e.target.value = '';
     }catch(error){
-      displayDialog('Error',error.message,'Okay');
-      document.querySelector('dialog').classList.add('error');
+      displayDialog('Error',error.message,'note');
     }
    });
 });

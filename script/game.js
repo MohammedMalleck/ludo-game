@@ -250,7 +250,7 @@ export function gameJSCode(){
           moveToFirstBox(playerEl);
         }else if(home !== currentPlayer.home ){
           //if the clicked player does not match the current player then point to the current player
-          displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'Okay','error');
+          displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'note');
         };
       };
     });
@@ -273,7 +273,16 @@ export function gameJSCode(){
   });
 
   document.querySelector('.quit-game-btn').addEventListener('click',()=>{
-    quitBtnClicked = true;
-    window.location.reload();
+    displayDialog('Note','Are you sure that you want to quit the game?','quit-game');
+  });
+
+  window.addEventListener('click',(e)=>{
+    const clickedBtn = e.target.classList[1];
+    if( clickedBtn  === 'play-again' || clickedBtn  === 'yes' ){
+      quitBtnClicked = true;
+      window.location.reload();
+    }else if(clickedBtn  === 'no' ){
+      document.querySelector('dialog').close();
+    }
   });
 }

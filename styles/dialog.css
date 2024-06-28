@@ -14,12 +14,12 @@ dialog{
   pointer-events: none;
   transition:opacity .5s ease;
 
-  &.error .message-container{
+  &.error .dialog-container{
     background-color: rgb(182, 0, 0);
     color: white;
   }
 
-  &.success .message-container{
+  &.success .dialog-container{
     background-color: rgb(94, 220, 92);
     color: black;
   }
@@ -28,11 +28,11 @@ dialog{
     opacity: 1;
     pointer-events: all;
   }
-  &[open] .message-container{
+  &[open] .dialog-container{
     transform: rotateX(0deg);
   }
 }
-.message-container{
+.dialog-container{
   flex: 1;
   max-width: 50rem;
   transform: rotateX(60deg);
@@ -45,7 +45,7 @@ dialog{
   gap: 1rem;
   transition:transform .5s ease;
 }
-.message-text{
+.dialog-note{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,16 +56,50 @@ dialog{
     aspect-ratio: 1;
   }
 }
-.message-btn{
+.dialog-btn-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+
+  /*on quit game display yes & no*/
+  &.quit-game :nth-child(1),
+  &.quit-game :nth-child(2){
+    display: block;
+  }
+  /*on displaying a note only display okay*/
+  &.note :nth-child(3){
+    display: block;
+  }
+  /*on victory display only play again button*/
+  &.play-again :nth-child(4){
+    display: block;
+  }
+  
+}
+.dialog-btn{
+  display: none;
   width: 8rem;
-  margin-left: auto;
   padding: 0.45rem 0rem;
   border: none;
   border-radius:100vw;
   cursor: pointer;
   transition:filter 0.15s ease;
+  text-align: center;
 
   &:hover{
     filter: brightness(90%);
+  }
+  &.okay,
+  &.play-again{
+    margin-left: auto;
+  }
+}
+@media (max-width:400px){
+  .message-heading{
+    font-size: 2rem;
+  }
+  .message-text{
+    font-size: 1.4rem;
   }
 }

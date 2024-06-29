@@ -2,6 +2,8 @@ import { displayDialog } from "./script.js";
 
 export function gameJSCode(){
   const coordinatesData = new Map();
+  //save the arrangments data of each box
+  const boxArrangementDATA = new Map();
   const activePlayers = JSON.parse(localStorage.getItem('activePlayers'));
   let quitBtnClicked;
 
@@ -199,7 +201,7 @@ export function gameJSCode(){
     playerEl.setAttribute('data-player-out',boxNum);
     //remove the first value from the respective digit(which would be 6)
     digitEl.innerHTML = digitEl.innerText.slice(1);
-    reArrange(boxNum);
+    reArrange(playerEl,true);
   };
 
   function moveToCurrentBox(playerEl){
@@ -208,21 +210,35 @@ export function gameJSCode(){
     const left = coordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
     playerEl.style.top = top;
     playerEl.style.left = left;
-    reArrange(currentBoxNum)
+    reArrange(playerEl,false)
   };
 
-  function reArrange(boxNum){
+  function reArrange(playerEl,clicked){
+    const boxNum = playerEl.dataset.playerOut;
     const {top:boxTop,left:boxLeft , width : boxWidth} = document.querySelector(`[data-box-num="${boxNum}"]`).getBoundingClientRect();
     const newWidth = (boxWidth / 3);
-    const matchedPlayers = document.querySelectorAll(`[data-player-out="${boxNum}"]`);
-    if(matchedPlayers.length > 1){
-      matchedPlayers.forEach((playerEl,index)=>{
-        playerEl.style.width = newWidth + 'px';
-        playerEl.style.height = newWidth + 'px';
-        playerEl.style.top = boxTop + (newWidth * Math.floor(index/3)) + 'px';
-        playerEl.style.left = boxLeft + (newWidth * (index % 3)) + 'px';
-      });
-    };
+    //get the respective box arrangement key
+    const type = `boxArrangement${boxNum}`;
+    //if the respective box has no arragment data for this player
+    //then create one 
+    if(!boxArrangementDATA.has(type)){
+       boxArrangementDATA.set(type,[playerEl]);
+    }else{
+      const boxArrangementPlayers = boxArrangementDATA.get(type);
+      //push this player to the respective arrangements data 
+      //only if it was clicked . when we invoke this function to re position players then we dont want
+      //to re-add the players that are already present
+      clicked ? boxArrangementPlayers.push(playerEl) : '';
+      //during re sizing we only re-position those players whos resepctive array have more than 1 player
+      if(boxArrangementPlayers.length > 1){
+        boxArrangementPlayers.forEach((playerEl,index)=>{
+          playerEl.style.width = newWidth + 'px';
+          playerEl.style.height = newWidth + 'px';
+          playerEl.style.top = boxTop + (newWidth * Math.floor(index/3)) + 'px';
+          playerEl.style.left = boxLeft + (newWidth * (index % 3)) + 'px';
+        });
+      }
+    }
   };
 
 

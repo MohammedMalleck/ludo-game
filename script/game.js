@@ -25,14 +25,12 @@ export function gameJSCode(){
     const playerElWidth = document.querySelector('.player').clientWidth;
     //set the co-ordinates of each jail container.
     //use its class to  create an object ie(for the class red you would create red-jails obj e.t.c),
-    //and use its jailNum attr to determine its left top number(ie:left1,top1...);
-    const jailEls = Array.from(document.querySelectorAll('.player-container'));
-
-    jailEls.forEach(jailEl => {
+    //and use its index to determine its left top number(ie:left1,top1...);
+    document.querySelectorAll('.player-container').forEach((jailEl,index) => {
       const {left,top,width : playerContainerWidth}  = jailEl.getBoundingClientRect();
       const centerTop = calculateCenter(top,playerContainerWidth,playerElWidth) + 'px';
       const centerLeft = calculateCenter(left,playerContainerWidth,playerElWidth) + 'px';
-      const {jailNum} = jailEl.dataset;
+      const jailNum = ((index % 4) + 1);
       const jailCoordinateName = jailEl.classList[1] + '-jails';
 
       addToCoordinatesData(jailCoordinateName,`top${jailNum}`,`left${jailNum}`,centerTop,centerLeft,undefined);
@@ -40,13 +38,13 @@ export function gameJSCode(){
 
     //to get the co-ordinates of players respecitve jail access the object using 
     //the players class name.
-    //after this access the exact left and top values by using the playerNum attr
-    //ie(if player class is  red and num attr  1 then you would access red-jails object and properties
+    //after this access the exact left and top values by using the player index value
+    //ie(if player class is  red and index  0 then you would access red-jails object and properties
     //top1,left1);
-    document.querySelectorAll('.player').forEach((playerEl)=>{
+    document.querySelectorAll('.player').forEach((playerEl,index)=>{
       if(!playerEl.dataset.playerOut){
         const playerName = playerEl.classList[1] + '-jails';
-        const {playerNum} = playerEl.dataset;
+        const playerNum = ((index % 4) + 1);
         const coordinatesObject = coordinatesData.get(playerName);
 
         const left = coordinatesObject[`left${playerNum}`];
@@ -64,10 +62,8 @@ export function gameJSCode(){
 
   function setBoxesCoordinates(){
     const  playerWidth = document.querySelector('.player').clientWidth; 
-
-    const boxesEls = Array.from(document.querySelectorAll('.box'));
     
-    boxesEls.forEach(box =>{
+    document.querySelectorAll('.box').forEach(box =>{
       const {homeBox,boxNum,startBox} = box.dataset;
       const {top ,left , width : boxWidth} = box.getBoundingClientRect();
       const centerTop = calculateCenter(top,boxWidth,playerWidth) + "px";
@@ -196,21 +192,28 @@ export function gameJSCode(){
     //get the top and left value using the boxNum
     const top = coordinatesData.get('boxes')[`boxesTop${boxNum}`];
     const left = coordinatesData.get('boxes')[`boxesLeft${boxNum}`];
-    playerEl.style = `top:${top}; left:${left};`;
     //safe the player current box number in player out attribute
     playerEl.setAttribute('data-player-out',boxNum);
+    //posiiton the player in the default position if its the first player in the 
+    //respective first box
+    reArrange(playerEl,true) ? playerEl.style = `top:${top}; left:${left};`: '';
     //remove the first value from the respective digit(which would be 6)
     digitEl.innerHTML = digitEl.innerText.slice(1);
-    reArrange(playerEl,true);
   };
 
   function moveToCurrentBox(playerEl){
     const currentBoxNum = playerEl.dataset.playerOut;
+    const currentBoxArrangementDATA =  boxArrangementDATA.get( `boxArrangement${currentBoxNum}`);
     const top = coordinatesData.get('boxes')[`boxesTop${currentBoxNum}`];
     const left = coordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
-    playerEl.style.top = top;
-    playerEl.style.left = left;
-    reArrange(playerEl,false)
+    //during re sizing we only re-position those players whos resepctive 
+    //arrangements array have more than 1 player
+    if(currentBoxArrangementDATA.length > 1){
+      reArrange(playerEl,false)
+    }else{
+      playerEl.style.top = top;
+      playerEl.style.left = left;
+    }
   };
 
   function reArrange(playerEl,clicked){
@@ -223,21 +226,21 @@ export function gameJSCode(){
     //then create one 
     if(!boxArrangementDATA.has(type)){
        boxArrangementDATA.set(type,[playerEl]);
+       //return a true value indicating that the player is the first player in the box,
+       //and hence needs no re arrangement 
+       return true;
     }else{
       const boxArrangementPlayers = boxArrangementDATA.get(type);
       //push this player to the respective arrangements data 
       //only if it was clicked . when we invoke this function to re position players then we dont want
       //to re-add the players that are already present
       clicked ? boxArrangementPlayers.push(playerEl) : '';
-      //during re sizing we only re-position those players whos resepctive array have more than 1 player
-      if(boxArrangementPlayers.length > 1){
-        boxArrangementPlayers.forEach((playerEl,index)=>{
-          playerEl.style.width = newWidth + 'px';
-          playerEl.style.height = newWidth + 'px';
-          playerEl.style.top = boxTop + (newWidth * Math.floor(index/3)) + 'px';
-          playerEl.style.left = boxLeft + (newWidth * (index % 3)) + 'px';
-        });
-      }
+      boxArrangementPlayers.forEach((playerEl,index)=>{
+        playerEl.style.width = newWidth + 'px';
+        playerEl.style.height = newWidth + 'px';
+        playerEl.style.top = boxTop + (newWidth * Math.floor(index/3)) + 'px';
+        playerEl.style.left = boxLeft + (newWidth * (index % 3)) + 'px';
+      });
     }
   };
 

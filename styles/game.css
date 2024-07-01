@@ -247,7 +247,7 @@ li{
   height: var(--player-width);
   border-radius: 50%;
   cursor: pointer;
-  transition: filter 0.15s ease ,left 0.15s ease , top 0.15s ease;
+  transition: filter 0.15s ease ,left 0.15s ease , top 0.15s ease , width 0.15s ease , height 0.15s ease;
   display:flex;
 
   &:hover{

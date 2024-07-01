@@ -16,7 +16,7 @@ export function gameJSCode(){
           <div class="user-name">${activePlayer.name}</div>
           <div class="numbers">1</div>
           <button class="roll-btn">Roll</button>
-          <div data-home-name="${activePlayer.home}" class="roll-digits"></div>
+          <div data-digit-name="${activePlayer.home}" class="roll-digits"></div>
         </div> 
     `).join('\n');
   }
@@ -181,13 +181,13 @@ export function gameJSCode(){
   function findTheCurrentPlayer(){
     return [...document.querySelectorAll('.roll-digits')].map(rollDigitEl => {
       if(rollDigitEl.dataset.hasAValue){
-       return {home : rollDigitEl.dataset.homeName , text : rollDigitEl.innerText};
+       return {home : rollDigitEl.dataset.digitName , text : rollDigitEl.innerText};
       };
     }).filter(Boolean)[0];
   };
   function moveToFirstBox(playerEl){
     const home = playerEl.classList[1];
-    const digitEl = document.querySelector(`[data-home-name="${home}"]`);
+    const digitEl = document.querySelector(`[data-digit-name="${home}"]`);
     const boxNum = coordinatesData.get('boxes')[`startbox${home}`];
     //get the top and left value using the boxNum
     const top = coordinatesData.get('boxes')[`boxesTop${boxNum}`];
@@ -199,6 +199,12 @@ export function gameJSCode(){
     reArrange(playerEl,true) ? playerEl.style = `top:${top}; left:${left};`: '';
     //remove the first value from the respective digit(which would be 6)
     digitEl.innerHTML = digitEl.innerText.slice(1);
+    const freePlayers = [...document.querySelectorAll(`.player.${home}`)].filter(playerEl => playerEl.dataset.playerOut).length;
+    //if the respective home has only one player free and 
+    //one value remaining to be moved then move the player automatically.
+    if(freePlayers === 1 && digitEl.innerText.length === 1){
+      movePlayer(playerEl,Number(digitEl.innerText));
+    }
   };
 
   function moveToCurrentBox(playerEl){
@@ -244,6 +250,44 @@ export function gameJSCode(){
     }
   };
 
+  function movePlayer(playerEl,moveValue){
+    const boxNum = Number(playerEl.dataset.playerOut);
+    let moved = 0;
+    let intervalID;
+    let newBoxNum;
+
+    //remove the player inline size just in case if its being
+    // moved from an box with multiple players
+    playerEl.style.width = '';
+    playerEl.style.height = '';
+    //remove the player from its current box arrangements array
+    const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
+    const index = previousBoxArrangementsArr.indexOf(playerEl);
+    previousBoxArrangementsArr.splice(index,1);
+    //get the players digit el
+    const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);
+    const boxesObject = coordinatesData.get('boxes');
+
+    intervalID = setInterval(()=>{
+      //run interval until the player is moved 
+      //to the appropriate box
+      if(moved < moveValue){
+        moved++;
+        newBoxNum = boxNum + moved;
+        playerEl.style.top = boxesObject[`boxesTop${newBoxNum}`];
+        playerEl.style.left = boxesObject[`boxesLeft${newBoxNum}`];
+      }else{
+        clearInterval(intervalID);
+        //once the player reaches its new box
+        //modify its player out attribute
+        playerEl.dataset.playerOut = newBoxNum;
+        //remove the moved value from the player digit element 
+        digitEl.innerHTML = digitEl.innerText.slice(1);
+        reArrange(playerEl,true);
+      }
+    },400);
+  };
+
 
 
   renderRollsHTML();
@@ -267,6 +311,9 @@ export function gameJSCode(){
         //then free it
         if(home === currentPlayer.home && !playerEl.dataset.playerOut && currentPlayer.text.length > 1){
           moveToFirstBox(playerEl);
+          //if the user has clicked a matching free player with only one number to be moved then move it
+        }else if(home === currentPlayer.home && playerEl.dataset.playerOut && currentPlayer.text.length === 1){
+          movePlayer(playerEl,Number(currentPlayer.text));
         }else if(home !== currentPlayer.home ){
           //if the clicked player does not match the current player then point to the current player
           displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'note');

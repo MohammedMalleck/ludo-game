@@ -196,7 +196,13 @@ export function gameJSCode(){
     playerEl.setAttribute('data-player-out',boxNum);
     //posiiton the player in the default position if its the first player in the 
     //respective first box
-    reArrange(playerEl,true) ? playerEl.style = `top:${top}; left:${left};`: '';
+    const type = `boxArrangement${boxNum}`;
+    if(!boxArrangementDATA.has(type)){
+      boxArrangementDATA.set(type,[playerEl]);
+      playerEl.style = `top:${top}; left:${left};`;
+    }else{
+      reArrange(playerEl,true,false);
+    };
     //remove the first value from the respective digit(which would be 6)
     digitEl.innerHTML = digitEl.innerText.slice(1);
     const freePlayers = [...document.querySelectorAll(`.player.${home}`)].filter(playerEl => playerEl.dataset.playerOut).length;
@@ -215,39 +221,33 @@ export function gameJSCode(){
     //during re sizing we only re-position those players whos resepctive 
     //arrangements array have more than 1 player
     if(currentBoxArrangementDATA.length > 1){
-      reArrange(playerEl,false)
+      reArrange(playerEl,false,document.querySelector(`[data-box-num="${currentBoxNum}"]`).dataset.strongHold ? true : false);
     }else{
       playerEl.style.top = top;
       playerEl.style.left = left;
     }
   };
 
-  function reArrange(playerEl,clicked){
+  function reArrange(playerEl,clicked,strongHold){
     const boxNum = playerEl.dataset.playerOut;
-    const {top:boxTop,left:boxLeft , width : boxWidth} = document.querySelector(`[data-box-num="${boxNum}"]`).getBoundingClientRect();
-    const newWidth = (boxWidth / 3);
+    const boxEl =  document.querySelector(`[data-box-num="${boxNum}"]`);
+    const {top:boxTop,left:boxLeft , width : boxWidth} = boxEl.getBoundingClientRect();
+    const borderValue = parseFloat(getComputedStyle(boxEl).getPropertyValue('border-width'));
+    const strongHoldExtraValue = strongHold ? borderValue : 0;
+    const newWidth = (boxWidth / 3) - strongHoldExtraValue;
     //get the respective box arrangement key
     const type = `boxArrangement${boxNum}`;
-    //if the respective box has no arragment data for this player
-    //then create one 
-    if(!boxArrangementDATA.has(type)){
-       boxArrangementDATA.set(type,[playerEl]);
-       //return a true value indicating that the player is the first player in the box,
-       //and hence needs no re arrangement 
-       return true;
-    }else{
-      const boxArrangementPlayers = boxArrangementDATA.get(type);
-      //push this player to the respective arrangements data 
-      //only if it was clicked . when we invoke this function to re position players then we dont want
-      //to re-add the players that are already present
-      clicked ? boxArrangementPlayers.push(playerEl) : '';
-      boxArrangementPlayers.forEach((playerEl,index)=>{
-        playerEl.style.width = newWidth + 'px';
-        playerEl.style.height = newWidth + 'px';
-        playerEl.style.top = boxTop + (newWidth * Math.floor(index/3)) + 'px';
-        playerEl.style.left = boxLeft + (newWidth * (index % 3)) + 'px';
-      });
-    }
+    const boxArrangementPlayers = boxArrangementDATA.get(type);
+    //push this player to the respective arrangements data 
+    //only if it was clicked . when we invoke this function to re position players then we dont want
+    //to re-add the players that are already present
+    clicked ? boxArrangementPlayers.push(playerEl) : '';
+    boxArrangementPlayers.forEach((playerEl,index)=>{
+      playerEl.style.width = newWidth  + 'px';
+      playerEl.style.height = newWidth + 'px';
+      playerEl.style.top = (boxTop + strongHoldExtraValue) + (newWidth * Math.floor(index/3)) + 'px';
+      playerEl.style.left = (boxLeft +strongHoldExtraValue) + (newWidth * (index % 3)) + 'px';
+    });
   };
 
   function movePlayer(playerEl,moveValue){
@@ -264,6 +264,7 @@ export function gameJSCode(){
     const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
     const index = previousBoxArrangementsArr.indexOf(playerEl);
     previousBoxArrangementsArr.splice(index,1);
+    !previousBoxArrangementsArr.length ? boxArrangementDATA.delete(`boxArrangement${boxNum}`) : '';
     //get the players digit el
     const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);
     const boxesObject = coordinatesData.get('boxes');
@@ -283,11 +284,30 @@ export function gameJSCode(){
         playerEl.dataset.playerOut = newBoxNum;
         //remove the moved value from the player digit element 
         digitEl.innerHTML = digitEl.innerText.slice(1);
-        reArrange(playerEl,true);
+        //decide the result of the move(ie : kill , stronghold or a normal move)
+        moveResult(playerEl,newBoxNum);
       }
     },400);
   };
 
+  function moveResult(playerEl,newBoxNum){
+    const type = `boxArrangement${newBoxNum}`;
+    const playerElHome = playerEl.classList[1];
+    const newBoxEl = document.querySelector(`[data-box-num="${newBoxNum}"]`);
+     if(!boxArrangementDATA.has(type)){
+      boxArrangementDATA.set(type,[playerEl]);
+     }else{
+        const boxData = boxArrangementDATA.get(type);
+        //if the new box already has one player with the same home
+        //then make that box a strong hold box of the respecitve home with a value
+        if(boxData.length === 1 && boxData[0].classList[1] === playerElHome){
+          newBoxEl.setAttribute('data-strong-hold',playerElHome);
+          newBoxEl.setAttribute('data-strong-hold-value','2');
+          newBoxEl.setAttribute('strong-hold-content',`${playerElHome.replace(playerElHome.charAt(0),playerElHome.charAt(0).toUpperCase())} Strong Hold!`)
+          reArrange(playerEl,true,true);
+        };
+     };
+  };
 
 
   renderRollsHTML();

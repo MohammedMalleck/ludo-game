@@ -130,6 +130,46 @@ li{
     transform: scale(2.5);
   }
 }
+[data-strong-hold="green"],
+[data-strong-hold="yellow"],
+[data-strong-hold="red"],
+[data-strong-hold="blue"]{
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+
+  &::before{
+    position: absolute;
+    content: attr(strong-hold-content);
+    font-size: .9rem;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 1;
+    background-color: white;
+    white-space: nowrap;
+    padding:.2rem .3rem;
+    border-radius: 100vw;
+    opacity: 0;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+
+    animation:displayStrongHold 3s ease forwards;
+    animation-delay: 0.5s;
+  }
+}
+[data-strong-hold="green"]{
+  border-color: var(--green-color);
+}
+[data-strong-hold="yellow"]{
+  border-color: var(--yellow-color);
+}
+[data-strong-hold="blue"]{
+  border-color: var(--blue-color);
+}
+[data-strong-hold="red"]{
+  border-color: var(--red-color);
+}
 .jail-container{
   grid-column: span 6;
   grid-row: span 6;
@@ -469,6 +509,15 @@ li{
   .quit-game-btn{
     font-size: 1.5rem;
   }
+  [data-strong-hold="green"],
+  [data-strong-hold="yellow"],
+  [data-strong-hold="red"],
+  [data-strong-hold="blue"]{
+
+    &::before{
+      font-size: .6rem;
+    }
+  }
 }
 @media (max-width:675px){
   header{
@@ -525,6 +574,17 @@ li{
   }
   .quit-game-btn{
     font-size: 1.4rem;
+  }
+  [data-strong-hold="green"],
+  [data-strong-hold="yellow"],
+  [data-strong-hold="red"],
+  [data-strong-hold="blue"]{
+    border-width: 1.5px;
+
+    &::before{
+      font-size: .45rem;
+      padding:.15rem .25rem;
+    }
   }
 }
 @media (max-width:490px){
@@ -609,6 +669,17 @@ li{
       animation: pointAnimationTopBottom 1.3s ease infinite;
     }
   }
+  [data-strong-hold="green"],
+  [data-strong-hold="yellow"],
+  [data-strong-hold="red"],
+  [data-strong-hold="blue"]{
+    border-width: 1px;
+
+    &::before{
+      font-size: .4rem;
+      padding:.1rem .2rem;
+    }
+  }
 }
 @media (max-width:370px){
   .roll-container{
@@ -673,5 +744,19 @@ li{
   100%{
     top :var(--board-player-top);
     left: var(--board-player-left);
+  }
+}
+@keyframes displayStrongHold{
+  30%{
+    top: -50%;
+    opacity: 1;
+  }
+  50%{
+    top: -50%;
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+    top: -50%;
   }
 }

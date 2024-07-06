@@ -209,7 +209,7 @@ export function gameJSCode(){
     const boxEl =  document.querySelector(`[data-box-num="${boxNum}"]`);
     const {top:boxTop,left:boxLeft , width : boxWidth} = boxEl.getBoundingClientRect();
     const borderValue = parseFloat(getComputedStyle(boxEl).getPropertyValue('border-width'));
-    const strongHoldExtraValue = strongHold ? borderValue : 0;
+    const strongHoldExtraValue = strongHold || boxEl.dataset.strongHold ? borderValue : 0;
     const newWidth = (boxWidth / 3) - strongHoldExtraValue;
     //get the respective box arrangement key
     const type = `boxArrangement${boxNum}`;
@@ -240,7 +240,9 @@ export function gameJSCode(){
     const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
     const index = previousBoxArrangementsArr.indexOf(playerEl);
     previousBoxArrangementsArr.splice(index,1);
-    !previousBoxArrangementsArr.length ? boxArrangementDATA.delete(`boxArrangement${boxNum}`) : '';
+    if(!previousBoxArrangementsArr.length) boxArrangementDATA.delete(`boxArrangement${boxNum}`)
+    else reArrange(playerEl,false,false);
+    
     //get the players digit el
     const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);
     const boxesObject = boxesCoordinatesData.get('boxes');

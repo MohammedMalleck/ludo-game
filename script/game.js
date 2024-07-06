@@ -1,11 +1,12 @@
 import { displayDialog } from "./script.js";
 
 export function gameJSCode(){
-  const coordinatesData = new Map();
+  const boxesCoordinatesData = new Map();
   //save the arrangments data of each box
   const boxArrangementDATA = new Map();
   const activePlayers = JSON.parse(localStorage.getItem('activePlayers'));
   let quitBtnClicked;
+  let timeOutID;
 
   function renderRollsHTML(){
     document.querySelector('.ludo-container').innerHTML += activePlayers.map((activePlayer,index) => `
@@ -22,36 +23,11 @@ export function gameJSCode(){
   }
 
   function handlePlayersDefaultPosition(){
-    const playerElWidth = document.querySelector('.player').clientWidth;
-    //set the co-ordinates of each jail container.
-    //use its class to  create an object ie(for the class red you would create red-jails obj e.t.c),
-    //and use its index to determine its left top number(ie:left1,top1...);
-    document.querySelectorAll('.player-container').forEach((jailEl,index) => {
-      const {left,top,width : playerContainerWidth}  = jailEl.getBoundingClientRect();
-      const centerTop = calculateCenter(top,playerContainerWidth,playerElWidth) + 'px';
-      const centerLeft = calculateCenter(left,playerContainerWidth,playerElWidth) + 'px';
-      const jailNum = ((index % 4) + 1);
-      const jailCoordinateName = jailEl.classList[1] + '-jails';
-
-      addToCoordinatesData(jailCoordinateName,`top${jailNum}`,`left${jailNum}`,centerTop,centerLeft,undefined);
-    });
-
-    //to get the co-ordinates of players respecitve jail access the object using 
-    //the players class name.
-    //after this access the exact left and top values by using the player index value
-    //ie(if player class is  red and index  0 then you would access red-jails object and properties
-    //top1,left1);
     document.querySelectorAll('.player').forEach((playerEl,index)=>{
       if(!playerEl.dataset.playerOut){
-        const playerName = playerEl.classList[1] + '-jails';
-        const playerNum = ((index % 4) + 1);
-        const coordinatesObject = coordinatesData.get(playerName);
-
-        const left = coordinatesObject[`left${playerNum}`];
-        const top = coordinatesObject[`top${playerNum}`];
-
-        playerEl.style.left = left;
-        playerEl.style.top = top;
+        const {top , left , width} = [...document.querySelectorAll('.player-container')].find((_,i) => i === index).getBoundingClientRect();
+        playerEl.style.top = calculateCenter(top,width,playerEl.clientWidth) + 'px';
+        playerEl.style.left = calculateCenter(left,width,playerEl.clientWidth) + 'px';
       }else{
         //if the player is freed from jail then dont move it back to jail
         //but the box it currently is in
@@ -74,11 +50,11 @@ export function gameJSCode(){
   }
 
   function addToCoordinatesData(type,topKey,leftKey,topValue,leftValue,startBoxKey,startBoxValue,homeBoxKey){
-    if(!coordinatesData.has(type)){
-      coordinatesData.set(type , {coordinatesType : type});
+    if(!boxesCoordinatesData.has(type)){
+      boxesCoordinatesData.set(type , {coordinatesType : type});
     }
 
-    const getTypeObj = coordinatesData.get(type);
+    const getTypeObj = boxesCoordinatesData.get(type);
 
     getTypeObj[`${topKey}`] = topValue;
     getTypeObj[`${leftKey}`] = leftValue;
@@ -188,10 +164,10 @@ export function gameJSCode(){
   function moveToFirstBox(playerEl){
     const home = playerEl.classList[1];
     const digitEl = document.querySelector(`[data-digit-name="${home}"]`);
-    const boxNum = coordinatesData.get('boxes')[`startbox${home}`];
+    const boxNum =  boxesCoordinatesData.get('boxes')[`startbox${home}`];
     //get the top and left value using the boxNum
-    const top = coordinatesData.get('boxes')[`boxesTop${boxNum}`];
-    const left = coordinatesData.get('boxes')[`boxesLeft${boxNum}`];
+    const top = boxesCoordinatesData.get('boxes')[`boxesTop${boxNum}`];
+    const left = boxesCoordinatesData.get('boxes')[`boxesLeft${boxNum}`];
     //safe the player current box number in player out attribute
     playerEl.setAttribute('data-player-out',boxNum);
     //posiiton the player in the default position if its the first player in the 
@@ -216,8 +192,8 @@ export function gameJSCode(){
   function moveToCurrentBox(playerEl){
     const currentBoxNum = playerEl.dataset.playerOut;
     const currentBoxArrangementDATA =  boxArrangementDATA.get( `boxArrangement${currentBoxNum}`);
-    const top = coordinatesData.get('boxes')[`boxesTop${currentBoxNum}`];
-    const left = coordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
+    const top = boxesCoordinatesData.get('boxes')[`boxesTop${currentBoxNum}`];
+    const left = boxesCoordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
     //during re sizing we only re-position those players whos resepctive 
     //arrangements array have more than 1 player
     if(currentBoxArrangementDATA.length > 1){
@@ -260,14 +236,14 @@ export function gameJSCode(){
     // moved from an box with multiple players
     playerEl.style.width = '';
     playerEl.style.height = '';
-    //remove the player from its current box arrangements array
+    //remove the player from its previous box arrangements array
     const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
     const index = previousBoxArrangementsArr.indexOf(playerEl);
     previousBoxArrangementsArr.splice(index,1);
     !previousBoxArrangementsArr.length ? boxArrangementDATA.delete(`boxArrangement${boxNum}`) : '';
     //get the players digit el
     const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);
-    const boxesObject = coordinatesData.get('boxes');
+    const boxesObject = boxesCoordinatesData.get('boxes');
 
     intervalID = setInterval(()=>{
       //run interval until the player is moved 
@@ -316,8 +292,11 @@ export function gameJSCode(){
   document.querySelector('[data-roll-turn="1"]').classList.add('point');
 
   window.addEventListener('resize',()=>{
-    setBoxesCoordinates();
-    handlePlayersDefaultPosition();
+    clearTimeout(timeOutID);
+    timeOutID = setTimeout(()=>{
+      setBoxesCoordinates();
+      handlePlayersDefaultPosition();
+    },200);
   });
 
   document.querySelectorAll('.roll-btn').forEach(rollBtn => { new RollBtn(rollBtn) });
@@ -350,8 +329,8 @@ export function gameJSCode(){
       playerEl.style.display = 'none';
     });
   });
-  //display the default browser pop when the user 
-  //refreshes the game page
+  // display the default browser pop when the user 
+  // refreshes the game page
   window.addEventListener('beforeunload',(event)=>{
     if(!quitBtnClicked){
       event.preventDefault();

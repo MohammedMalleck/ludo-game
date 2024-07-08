@@ -197,7 +197,7 @@ export function gameJSCode(){
     //during re sizing we only re-position those players whos resepctive 
     //arrangements array have more than 1 player
     if(currentBoxArrangementDATA.length > 1){
-      reArrange(playerEl,false,document.querySelector(`[data-box-num="${currentBoxNum}"]`).dataset.strongHold ? true : false);
+      reArrange(playerEl,false,document.querySelector(`[data-box-num="${currentBoxNum}"]`).dataset.strongHold);
     }else{
       playerEl.style.top = top;
       playerEl.style.left = left;
@@ -228,20 +228,40 @@ export function gameJSCode(){
 
   function movePlayer(playerEl,moveValue){
     const boxNum = Number(playerEl.dataset.playerOut);
+    const isStrongHoldBox = document.querySelector(`[data-box-num="${boxNum}"]`).dataset.strongHold; 
     let moved = 0;
     let intervalID;
     let newBoxNum;
 
     //remove the player inline size just in case if its being
-    // moved from an box with multiple players
+    // moved from an box with multiple players + 
+    //remove its player out value since it deosnt belong to the same box
+    //anymore
     playerEl.style.width = '';
     playerEl.style.height = '';
+    playerEl.dataset.playerOut = '';
     //remove the player from its previous box arrangements array
     const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
     const index = previousBoxArrangementsArr.indexOf(playerEl);
     previousBoxArrangementsArr.splice(index,1);
-    if(!previousBoxArrangementsArr.length) boxArrangementDATA.delete(`boxArrangement${boxNum}`)
-    else reArrange(playerEl,false,false);
+    const totalPlayers = previousBoxArrangementsArr.length;
+    //if no player remains after moving this player
+    //then delete the respective boxes arrangement data
+    if(!totalPlayers){
+       boxArrangementDATA.delete(`boxArrangement${boxNum}`);
+       //if only one player remains then re-size it
+    }else if(totalPlayers === 1){
+      setTimeout(()=>{
+        const playerEl = document.querySelector(`[data-player-out="${boxNum}"`);
+        playerEl.removeAttribute('style');
+        playerEl.style.top = boxesCoordinatesData.get('boxes')[`boxesTop${boxNum}`];
+        playerEl.style.left = boxesCoordinatesData.get('boxes')[`boxesLeft${boxNum}`];
+      },600);
+      //if more then one player remains + the last player
+      //was not removed then re-arrange them 
+    }else if(index !== totalPlayers){
+      reArrange(playerEl,false,isStrongHoldBox);
+    };
     
     //get the players digit el
     const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);

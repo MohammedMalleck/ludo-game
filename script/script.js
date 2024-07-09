@@ -32,10 +32,8 @@ export function displayDialog(heading,note,type){
   };
 
   dialogEl.showModal();
-  //remove error class from dialog el before adding either error or success
-  /*Note :- success class is not removed since after adding success class the page would re-load hence removing it*/
-  dialogEl.classList.remove('error');
-  type === 'play-again' ? dialogEl.classList.add('success') : dialogEl.classList.add('error');
+  /*add success or error depending upon the type of button being displayed*/
+  dialogEl.className = type === 'play-again' ? 'success' : 'error';
   dialogBtnContainer.classList.add(type);
 }
 

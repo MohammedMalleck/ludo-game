@@ -194,7 +194,7 @@ export function gameJSCode(){
     const currentBoxArrangementDATA =  boxArrangementDATA.get( `boxArrangement${currentBoxNum}`);
     const top = boxesCoordinatesData.get('boxes')[`boxesTop${currentBoxNum}`];
     const left = boxesCoordinatesData.get('boxes')[`boxesLeft${currentBoxNum}`];
-    //during re sizing we only re-position those players whos resepctive 
+    //during re sizing we only re-arrange those players whos resepctive 
     //arrangements array have more than 1 player
     if(currentBoxArrangementDATA.length > 1){
       reArrange(playerEl,false,document.querySelector(`[data-box-num="${currentBoxNum}"]`).dataset.strongHold);
@@ -209,7 +209,7 @@ export function gameJSCode(){
     const boxEl =  document.querySelector(`[data-box-num="${boxNum}"]`);
     const {top:boxTop,left:boxLeft , width : boxWidth} = boxEl.getBoundingClientRect();
     const borderValue = parseFloat(getComputedStyle(boxEl).getPropertyValue('border-width'));
-    const strongHoldExtraValue = strongHold || boxEl.dataset.strongHold ? borderValue : 0;
+    const strongHoldExtraValue = strongHold  ? borderValue : 0;
     const newWidth = (boxWidth / 3) - strongHoldExtraValue;
     //get the respective box arrangement key
     const type = `boxArrangement${boxNum}`;

@@ -165,28 +165,26 @@ export function gameJSCode(){
     const home = playerEl.classList[1];
     const digitEl = document.querySelector(`[data-digit-name="${home}"]`);
     const boxNum =  boxesCoordinatesData.get('boxes')[`startbox${home}`];
+    //safe the player current box number in player out attribute
+    playerEl.setAttribute('data-player-out',boxNum);
+    //remove the first value from the respective digit(which would be 6)
+    digitEl.innerHTML = digitEl.innerText.slice(1);
+    //check if the player would be auto-moved
+    const freePlayers = [...document.querySelectorAll(`.player.${home}`)].filter(playerEl => playerEl.dataset.playerOut).length;
+    const autoMove = freePlayers === 1 && digitEl.innerText.length === 1;
     //get the top and left value using the boxNum
     const top = boxesCoordinatesData.get('boxes')[`boxesTop${boxNum}`];
     const left = boxesCoordinatesData.get('boxes')[`boxesLeft${boxNum}`];
-    //safe the player current box number in player out attribute
-    playerEl.setAttribute('data-player-out',boxNum);
     //posiiton the player in the default position if its the first player in the 
     //respective first box
     const type = `boxArrangement${boxNum}`;
-    if(!boxArrangementDATA.has(type)){
+    if(autoMove){
+      playerEl.style = `top:${top}; left:${left};`;
+      movePlayer(playerEl,Number(digitEl.innerText),true);
+    }else if(!boxArrangementDATA.has(type)){
       boxArrangementDATA.set(type,[playerEl]);
       playerEl.style = `top:${top}; left:${left};`;
-    }else{
-      reArrange(playerEl,true,false);
-    };
-    //remove the first value from the respective digit(which would be 6)
-    digitEl.innerHTML = digitEl.innerText.slice(1);
-    const freePlayers = [...document.querySelectorAll(`.player.${home}`)].filter(playerEl => playerEl.dataset.playerOut).length;
-    //if the respective home has only one player free and 
-    //one value remaining to be moved then move the player automatically.
-    if(freePlayers === 1 && digitEl.innerText.length === 1){
-      movePlayer(playerEl,Number(digitEl.innerText));
-    }
+    }else reArrange(playerEl,true,false);
   };
 
   function moveToCurrentBox(playerEl){
@@ -226,9 +224,8 @@ export function gameJSCode(){
     });
   };
 
-  function movePlayer(playerEl,moveValue){
+  function movePlayer(playerEl,moveValue,autoMove){
     const boxNum = Number(playerEl.dataset.playerOut);
-    const isStrongHoldBox = document.querySelector(`[data-box-num="${boxNum}"]`).dataset.strongHold; 
     let moved = 0;
     let intervalID;
     let newBoxNum;
@@ -240,29 +237,8 @@ export function gameJSCode(){
     playerEl.style.width = '';
     playerEl.style.height = '';
     playerEl.dataset.playerOut = '';
-    //remove the player from its previous box arrangements array
-    const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
-    const index = previousBoxArrangementsArr.indexOf(playerEl);
-    previousBoxArrangementsArr.splice(index,1);
-    const totalPlayers = previousBoxArrangementsArr.length;
-    //if no player remains after moving this player
-    //then delete the respective boxes arrangement data
-    if(!totalPlayers){
-       boxArrangementDATA.delete(`boxArrangement${boxNum}`);
-       //if only one player remains then re-size it
-    }else if(totalPlayers === 1){
-      setTimeout(()=>{
-        const playerEl = document.querySelector(`[data-player-out="${boxNum}"`);
-        playerEl.removeAttribute('style');
-        playerEl.style.top = boxesCoordinatesData.get('boxes')[`boxesTop${boxNum}`];
-        playerEl.style.left = boxesCoordinatesData.get('boxes')[`boxesLeft${boxNum}`];
-      },600);
-      //if more then one player remains + the last player
-      //was not removed then re-arrange them 
-    }else if(index !== totalPlayers){
-      reArrange(playerEl,false,isStrongHoldBox);
-    };
-    
+    !autoMove ? handlePlayersInPreviousBox(playerEl,boxNum) : ''; 
+
     //get the players digit el
     const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);
     const boxesObject = boxesCoordinatesData.get('boxes');
@@ -286,6 +262,29 @@ export function gameJSCode(){
         moveResult(playerEl,newBoxNum);
       }
     },400);
+  };
+
+  function handlePlayersInPreviousBox(playerEl,boxNum){
+    const isStrongHoldBox = document.querySelector(`[data-box-num="${boxNum}"]`).dataset.strongHold; 
+    const previousBoxArrangementsArr = boxArrangementDATA.get(`boxArrangement${boxNum}`);
+    const index = previousBoxArrangementsArr.indexOf(playerEl);
+    previousBoxArrangementsArr.splice(index,1);
+    const totalPlayers = previousBoxArrangementsArr.length;
+    //if no player remains after moving this player
+    //then delete the respective boxes arrangement data
+    if(!totalPlayers){
+      boxArrangementDATA.delete(`boxArrangement${boxNum}`);
+      //if only one player remains then re-size it
+    }else if(totalPlayers === 1){
+      setTimeout(()=>{
+        const playerEl = document.querySelector(`[data-player-out="${boxNum}"]`);
+        playerEl.removeAttribute('style');
+        playerEl.style.top = boxesCoordinatesData.get('boxes')[`boxesTop${boxNum}`];
+        playerEl.style.left = boxesCoordinatesData.get('boxes')[`boxesLeft${boxNum}`];
+      },600);
+    //if more then one player remains + the last player
+    //was not removed then re-arrange them 
+    } else if(index !== totalPlayers) reArrange(playerEl,false,isStrongHoldBox);
   };
 
   function moveResult(playerEl,newBoxNum){
@@ -312,7 +311,6 @@ export function gameJSCode(){
   handlePlayersDefaultPosition();
   setBoxesCoordinates();
   document.querySelector('[data-roll-turn="1"]').classList.add('point');
-
   window.addEventListener('resize',()=>{
     clearTimeout(timeOutID);
     timeOutID = setTimeout(()=>{
@@ -334,7 +332,7 @@ export function gameJSCode(){
           moveToFirstBox(playerEl);
           //if the user has clicked a matching free player with only one number to be moved then move it
         }else if(home === currentPlayer.home && playerEl.dataset.playerOut && currentPlayer.text.length === 1){
-          movePlayer(playerEl,Number(currentPlayer.text));
+          movePlayer(playerEl,Number(currentPlayer.text),false);
         }else if(home !== currentPlayer.home ){
           //if the clicked player does not match the current player then point to the current player
           displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'note');

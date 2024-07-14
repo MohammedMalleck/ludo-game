@@ -151,8 +151,8 @@ export function gameJSCode(){
     //add the class to enable animation
     playerEl.classList.add('done');
   }
-  function calculateCenter(offsetValue,containerWidth,playerWidth){
-    return (offsetValue + (containerWidth/2) - (playerWidth/2)).toFixed(3);
+  function calculateCenter(offsetValue,containerWidth,offsetElWidth){
+    return (offsetValue + (containerWidth/2) - (offsetElWidth/2)).toFixed(3);
   }
   function findTheCurrentPlayer(){
     return [...document.querySelectorAll('.roll-digits')].map(rollDigitEl => {
@@ -236,8 +236,8 @@ export function gameJSCode(){
     //anymore
     playerEl.style.width = '';
     playerEl.style.height = '';
-    playerEl.dataset.playerOut = '';
     !autoMove ? handlePlayersInPreviousBox(playerEl,boxNum) : ''; 
+    playerEl.dataset.playerOut = '';
 
     //get the players digit el
     const digitEl = document.querySelector(`[data-digit-name="${playerEl.classList[1]}"]`);
@@ -257,7 +257,8 @@ export function gameJSCode(){
         //modify its player out attribute
         playerEl.dataset.playerOut = newBoxNum;
         //remove the moved value from the player digit element 
-        digitEl.innerHTML = digitEl.innerText.slice(1);
+        const moveToDEL = [...digitEl.innerText].indexOf(`${moveValue}`);
+        digitEl.innerHTML = digitEl.innerText.slice(0,moveToDEL) + digitEl.innerText.slice(moveToDEL + 1);
         //decide the result of the move(ie : kill , stronghold or a normal move)
         moveResult(playerEl,newBoxNum);
       }
@@ -290,8 +291,12 @@ export function gameJSCode(){
   function moveResult(playerEl,newBoxNum){
     const type = `boxArrangement${newBoxNum}`;
     const playerElHome = playerEl.classList[1];
+    const freePlayers = [...document.querySelectorAll(`.player.${playerElHome}`)].filter(playerEl => playerEl.dataset.playerOut).length;
+    const moves = [...document.querySelector(`[data-digit-name="${playerElHome}"]`).innerText];
     const newBoxEl = document.querySelector(`[data-box-num="${newBoxNum}"]`);
-     if(!boxArrangementDATA.has(type)){
+    if(freePlayers === 1 && (moves.length && !moves.includes('6'))){
+      movePlayer(playerEl,Number(moves[0]),true);
+    }else if(!boxArrangementDATA.has(type)){
       boxArrangementDATA.set(type,[playerEl]);
      }else{
         const boxData = boxArrangementDATA.get(type);
@@ -304,6 +309,20 @@ export function gameJSCode(){
           reArrange(playerEl,true,true);
         };
      };
+  };
+
+  function handleMoveOptions(playerEl,playerHome){
+    const movesArray = [...document.querySelector(`[data-digit-name="${playerHome}"]`).textContent];
+    const lastDigit = Number(movesArray[movesArray.length - 1]);
+    const moveOptionsEl = document.querySelector('.move-options-container');
+    const top =playerEl.getBoundingClientRect().top - moveOptionsEl.clientHeight;
+    const left = calculateCenter(parseFloat(playerEl.style.left),playerEl.clientWidth,moveOptionsEl.clientWidth);
+  
+    moveOptionsEl.style.top = `${top}px`;
+    moveOptionsEl.style.left = `${left}px`;
+    moveOptionsEl.classList.add('visible');
+    moveOptionsEl.classList.add(`${playerHome}`);
+    document.querySelector('.move-option:nth-child(2)').textContent = lastDigit;
   };
 
 
@@ -325,6 +344,8 @@ export function gameJSCode(){
     playerEl.addEventListener('click',()=>{
       const currentPlayer = findTheCurrentPlayer();
       if(currentPlayer){
+        //hide move options if it is being displayed 
+        document.querySelector('.move-options-container').classList.remove('visible');
         const home = playerEl.classList[1];
         //if the clicked player matches the current player & is in jail and has the value to be moved out 
         //then free it
@@ -333,6 +354,9 @@ export function gameJSCode(){
           //if the user has clicked a matching free player with only one number to be moved then move it
         }else if(home === currentPlayer.home && playerEl.dataset.playerOut && currentPlayer.text.length === 1){
           movePlayer(playerEl,Number(currentPlayer.text),false);
+        }else if(home === currentPlayer.home && playerEl.dataset.playerOut && currentPlayer.text.length > 1){
+          playerEl.classList.add('move-options-player');
+          handleMoveOptions(playerEl,currentPlayer.home);
         }else if(home !== currentPlayer.home ){
           //if the clicked player does not match the current player then point to the current player
           displayDialog('Note',`Its currently the turn of the ${currentPlayer.home} player`,'note');
@@ -369,5 +393,12 @@ export function gameJSCode(){
     }else if(clickedBtn  === 'no' ){
       document.querySelector('dialog').close();
     }
+  });
+
+  document.querySelectorAll('.move-option').forEach(moveEl => {
+    moveEl.addEventListener('click',(e)=>{
+      e.target.parentElement.parentElement.classList.remove('visible');
+      movePlayer(document.querySelector('.move-options-player'),Number(e.target.textContent),false)
+    });
   });
 }

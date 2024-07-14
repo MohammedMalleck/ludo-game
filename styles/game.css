@@ -180,22 +180,26 @@ li{
 }
 .jail-container.yellow,
 .box.yellow,
-.player-container.yellow{
+.player-container.yellow,
+.move-options-container.yellow .move-option{
   background-color:var(--yellow-color);
 }
 .jail-container.green,
 .box.green,
-.player-container.green{
+.player-container.green,
+.move-options-container.green .move-option{
   background-color:var(--green-color);
 }
 .jail-container.blue,
 .box.blue,
-.player-container.blue{
+.player-container.blue,
+.move-options-container.blue .move-option{
   background-color: var(--blue-color);
 }
 .jail-container.red,
 .box.red,
-.player-container.red{
+.player-container.red,
+.move-options-container.red .move-option{
   background-color: var(--red-color);
 }
 .arrow-svg-container{
@@ -421,6 +425,73 @@ li{
    & > div{
       flex-shrink: none;
    }
+}
+/*move options*/
+.move-options-container{
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: clamp(20px, calc(0.7px + 7.76vw), 110px);
+  height: clamp(10px, calc(3px + 3.675vw), 50px);
+  gap: 5%;
+  opacity: 0;
+  pointer-events: none;
+  & > div{
+    display: flex;
+  }
+
+  & > div:nth-child(1){
+    flex: 2;
+    box-shadow: var(--box-shadow);
+  }
+  & > div:nth-child(2){
+    height: fit-content;
+  }
+
+  &.red .move-option,
+  &.green .move-option{
+    color: white;
+  }
+  &.yellow .move-option,
+  &.blue .move-option{
+    color: black;
+  }
+
+  &.visible{
+    animation:moveOptionsAni .3s ease forwards;
+  }
+}
+.move-option{
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color:black;
+  border-width:clamp(0.7px,calc(0.5px + 0.04vw),1.2px);
+  border-style: solid;
+  transition: filter 0.15s ease;
+  cursor: pointer;
+  font-size: clamp(0.6rem, calc(0.23rem + 1.07vw), 1.7rem);
+
+  &:hover{
+    filter: brightness(95%);
+  }
+}
+
+.point-triangle{
+  margin: 0 auto;
+  width: clamp(8px,4px + 1.095vw,18px);
+  height: clamp(5px,2px + 1.02vw,15px);
+  display: flex;
+
+  & svg{
+    width: 100%;
+    height: 100%;
+    animation:animationTopBottom 1s ease infinite;
+  }
 }
 /*media queries*/
 @media(max-width:955px){
@@ -658,7 +729,7 @@ li{
       top: 110%;
       left: 35%;
       content: '👆';
-      animation: pointAnimationTopBottom 1.3s ease infinite;
+      animation: animationTopBottom 1.3s ease infinite;
     }
 
     &.yellow::before,
@@ -666,7 +737,7 @@ li{
       top: 110%;
       right: 35%;
       content: '👆';
-      animation: pointAnimationTopBottom 1.3s ease infinite;
+      animation: animationTopBottom 1.3s ease infinite;
     }
   }
   [data-strong-hold="green"],
@@ -731,7 +802,7 @@ li{
     transform: translate(-50%,0%);
   }
 }
-@keyframes pointAnimationTopBottom{
+@keyframes animationTopBottom{
   50%{
     transform: translate(0%,-30%);
   }
@@ -758,5 +829,16 @@ li{
   100%{
     opacity: 0;
     top: -50%;
+  }
+}
+@keyframes moveOptionsAni{
+  from{
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0%);
+    pointer-events: all;
   }
 }

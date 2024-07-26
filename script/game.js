@@ -134,8 +134,6 @@ export function gameJSCode(){
     const home = playerEl.classList[1];
     //get the players rect values
     const {top , left} = playerEl.style;
-    const playerElTop = Number(top.replace('px',''));
-    const playerElLeft = Number(left.replace('px',''));
     const playerElWidth = playerEl.clientWidth;
     //get the respective player in the header and its rect values
     //get the values to center the player with the respective player in the header
@@ -143,8 +141,9 @@ export function gameJSCode(){
     const scoreSvgCenterTop = calculateCenter(scoreSvgTop,scoreSvgWidth,playerElWidth);
     const scoreSvgCenterLeft = calculateCenter(scoreSvgLeft,scoreSvgWidth,playerElWidth);
     //set the css variables on the player responsible for the animation
-    playerEl.style.setProperty("--current-top", (playerElTop - 50).toFixed(3) + "px");
-    playerEl.style.setProperty("--current-left", (playerElLeft - 50).toFixed(3) + "px");
+    /*use parse straight instead of saving values in variables + using Number with replace*/
+    playerEl.style.setProperty("--current-top", (parseFloat(top) - 50).toFixed(3) + "px");
+    playerEl.style.setProperty("--current-left", (parseFloat(left) - 50).toFixed(3) + "px");
     playerEl.style.setProperty("--board-player-top", scoreSvgCenterTop  + "px");
     playerEl.style.setProperty("--board-player-left", scoreSvgCenterLeft + "px");
     playerEl.style.zIndex = '4';
@@ -230,13 +229,14 @@ export function gameJSCode(){
     let intervalID;
     let newBoxNum;
 
-    //remove the player inline size just in case if its being
-    // moved from an box with multiple players + 
-    //remove its player out value since it deosnt belong to the same box
-    //anymore
-    playerEl.style.width = '';
-    playerEl.style.height = '';
-    !autoMove ? handlePlayersInPreviousBox(playerEl,boxNum) : ''; 
+    /*the player should be returned to its default size + should
+    re-arrange the players in the previous box only if it is not being auto moved*/
+    if(!autoMove){
+      /*use remove attributes*/
+      playerEl.style.removeProperty('width');
+      playerEl.style.removeProperty('height');
+      handlePlayersInPreviousBox(playerEl,boxNum) 
+    };
     playerEl.dataset.playerOut = '';
 
     //get the players digit el
@@ -366,11 +366,12 @@ export function gameJSCode(){
   });
 
   document.querySelectorAll('.player.done').forEach( playerEl => {
-    playerEl.addEventListener('animationend',()=>{
-      const home = playerEl.classList[1];
+    playerEl.addEventListener('animationend',(e)=>{
+      /*make sure the correct player is being removed*/
+      const home = e.target.classList[1];
       const scoreTxtEl = document.querySelector(`li.${home} > div`);
       scoreTxtEl.innerHTML = ++scoreTxtEl.textContent;
-      playerEl.style.display = 'none';
+      e.target.style.display = 'none';
     });
   });
   // display the default browser pop when the user 

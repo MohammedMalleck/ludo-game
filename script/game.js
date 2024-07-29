@@ -213,7 +213,7 @@ export function gameJSCode(){
     const boxArrangementPlayers = boxArrangementDATA.get(type);
     //push this player to the respective arrangements data 
     //only if it was clicked . when we invoke this function to re position players then we dont want
-    //to re-add the players that are already present
+    //to re-add the players that are already present/have been removed
     clicked ? boxArrangementPlayers.push(playerEl) : '';
     boxArrangementPlayers.forEach((playerEl,index)=>{
       playerEl.style.width = newWidth  + 'px';

@@ -294,12 +294,12 @@ export function gameJSCode(){
     const freePlayers = [...document.querySelectorAll(`.player.${playerElHome}`)].filter(playerEl => playerEl.dataset.playerOut).length;
     const moves = [...document.querySelector(`[data-digit-name="${playerElHome}"]`).innerText];
     const newBoxEl = document.querySelector(`[data-box-num="${newBoxNum}"]`);
+    const boxData = boxArrangementDATA.get(type);
     if(freePlayers === 1 && (moves.length && !moves.includes('6'))){
       movePlayer(playerEl,Number(moves[0]),true);
-    }else if(!boxArrangementDATA.has(type)){
+    }else if(!boxData){
       boxArrangementDATA.set(type,[playerEl]);
      }else{
-        const boxData = boxArrangementDATA.get(type);
         //if the new box already has one player with the same home
         //then make that box a strong hold box of the respecitve home with a value
         if(boxData.length === 1 && boxData[0].classList[1] === playerElHome){

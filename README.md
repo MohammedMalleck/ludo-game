@@ -12,10 +12,17 @@ particular action by the user. Also known as Pachisi , this game was invented in
 
 - Create issues for the cases that I might've missed.
 - Frok the repository and create pull requests of refactored code.
-###### Note : You can view the state management file in the repo , to get a better idea of how i am dealing with different cases.
+###### You can view the state management file in the repo , to get a better idea of how i am dealing with different cases.
 
 <br>
 
 ## Project Status
 
 This is an ongoing project , so dont get confused if you see cases that arent still completed from state management or arent noted in state management itself.
+
+<vr>
+
+## Note!
+
+I do not encourage individuals playing the game and waste much of their time which can be used in something productive. This game is being developed to expand my 
+problem solving skills not to create it for individuals who prefer to waste much of their time on a game based on luck. I highly recommend playing games that require more critical thinking and dont entirely depend upon luck.

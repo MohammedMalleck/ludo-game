@@ -24,5 +24,5 @@ This is an ongoing project , so dont get confused if you see cases that arent st
 
 ## Note!
 
-I do not encourage individuals playing the game and waste much of their time which can be used in something productive. This game is being developed to expand my 
-problem solving skills not to create it for individuals who prefer to waste much of their time on a game based on luck. I highly recommend playing games that require more critical thinking and dont entirely depend upon luck.
+I do not encourage individuals playing the game and wasting much of their time which can be used in something productive. This game is being developed to expand my 
+problem solving skills , not to create it for individuals who prefer to waste much of their time on a game based on luck. I highly recommend playing games that require more critical thinking and dont entirely depend upon luck.

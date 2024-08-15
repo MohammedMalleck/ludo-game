@@ -20,7 +20,7 @@ particular action by the user. Also known as Pachisi , this game was invented in
 
 This is an ongoing project , so dont get confused if you see cases that arent still completed from state management or arent noted in state management itself.
 
-<vr>
+<br>
 
 ## Note!
 

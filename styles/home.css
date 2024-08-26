@@ -1,12 +1,5 @@
-:root{
-  --primary-color:#003566;
-  --yellow-color : #eeef20;
-  --green-color:#5b875a;
-  --blue-color:#4895ef;
-  --red-color:#d90429;
-  --shadow:0rem 0rem 0.5rem rgba(255,255,255,0.5);
-}
 main{
+  --shadow:0rem 0rem .2em rgba(255,255,255,0.5);
   height: 100vh;
   height: 100svh;
   background-color: #00284e;
@@ -14,22 +7,24 @@ main{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5rem;
+  font-size: clamp(1.6rem,.8vw + .3rem,2.7rem);
+  gap: 2em;
   color: white;
+}
+main > h1{
+  font-size: 2em;
 }
 .btns-container{
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5rem;
+  gap: 2em;
   width: 100%;
-  padding: 0rem .5rem;
 }
 .play-game-btn,
 .view-btn{
-  width: 100%;
-  max-width: 14.5rem;
-  height: 4.6rem;
+  width:7em;
+  height: 2.3em;
   border-radius: 100vw;
   background: hsla(97, 56%, 42%, 1);
   background: linear-gradient(90deg, hsla(97, 56%, 42%, 1) 0%, hsla(92, 55%, 62%, 1) 100%);
@@ -37,12 +32,12 @@ main{
   background: -webkit-linear-gradient(90deg, hsla(97, 56%, 42%, 1) 0%, hsla(92, 55%, 62%, 1) 100%);
   filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#5DA92F", endColorstr="#9BD46A", GradientType=1 );
   border: none;
-  box-shadow: 0rem 0rem 0.5rem rgba(255,255,255,0.5);
+  box-shadow: var(--shadow);
   text-align: center;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  font-size: 1.9rem;
+  font-size: 1.15em;
   color :white;
   transition: scale 0.2s ease;
 }
@@ -112,8 +107,8 @@ main{
   }
 }
 .players-selection-holder{
-  flex: 1;
-  max-width: 40rem;
+  background-color: blue;
+  width:30em;
   display:grid;
   grid-template-columns: auto 2fr auto;
   align-items: center;

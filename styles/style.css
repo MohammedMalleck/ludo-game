@@ -3,19 +3,20 @@
   padding: 0px;
   box-sizing: border-box;
 }
+html{
+  font-size: 10px;
+}
 :root{
   --primary-color:#003566;
   --yellow-color : #eeef20;
   --green-color:#5b875a;
   --blue-color:#4895ef;
   --red-color:#d90429;
-}
-html{
-  font-size: 10px;
+  --shadow:0rem 0rem 0.5rem rgba(255,255,255,0.5);
 }
 body{
   font-family: "Roboto", sans-serif;
-  font-size:1.6rem;
+  font-size: 1.6rem;
 }
 a{
   text-decoration: none;

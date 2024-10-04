@@ -34,22 +34,22 @@ dialog{
 }
 .dialog-container{
   flex: 1;
-  max-width: 50rem;
+  max-width: 30em;
   transform: rotateX(60deg);
   height:fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  gap: 1rem;
+  padding: 1em;
+  gap: .5em;
   transition:transform .5s ease;
 }
 .dialog-note{
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: .5em;
 
   & svg{
     width: 2rem;
